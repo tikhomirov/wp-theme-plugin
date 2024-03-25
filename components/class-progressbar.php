@@ -28,8 +28,8 @@ class Progressbar {
             .public-progress-bar {
                 position: fixed;
                 bottom: 0;
-                height: 1px;
-                width: 12px;
+                height: 2px;
+                /*width: 12px;*/
                 background: #FF5722;
                 z-index: 99;
                 border-radius: 5px;

@@ -54,6 +54,6 @@ require_once 'functions.php';
 (new GoogleFont())->add_actions();
 MenuCart::$template = 'bs-5';
 (new MenuCart())->add_action();
-(new Panel())->add_actions();
+// (new Panel())->add_actions();
 (new ToTop())->add_actions();
 (new Progressbar())->add_actions();
