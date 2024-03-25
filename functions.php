@@ -1,0 +1,27 @@
+<?php
+
+use theme_plugin\components\MenuCart;
+
+/**
+ * Simple functions
+ */
+function get_mini_cart(){
+	return MenuCart::add_to_cart_fragments()['.mini-cart'] ?? '';
+}
+
+function get_mini_profile(){
+	MenuCart::get_menu();
+}
+
+// redirect from 'checkout/thankyou.php'
+add_action( 'woocommerce_before_template_part', function ( $name, $path, $located, $args ) {
+	if ( 'checkout/thankyou.php' === $name ) {
+		$order = $args['order'] instanceof WC_Order ? $args['order'] : null;
+		$query = http_build_query( [
+			'order_id' => $order->get_id(),
+			'p_date'   => $order->get_date_paid(),
+			'is_paid'  => $order->is_paid(), // retry check on endpoint
+		] );
+		wp_safe_redirect( '/?' . $query );
+	}
+}, 10, 4 );
