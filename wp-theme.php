@@ -17,7 +17,6 @@
 
 namespace theme_plugin;
 
-use Automattic\WooCommerce\Blocks\BlockTypes\MiniCart;
 use theme_plugin\components\GoogleFont;
 use theme_plugin\components\Loader;
 use theme_plugin\components\MenuCart;
