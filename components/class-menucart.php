@@ -10,6 +10,14 @@ namespace theme_plugin\components;
  */
 class MenuCart
 {
+    public $file;
+    public $url;
+    public $font;
+    public $assets;
+    public $ver;
+    public $dir;
+    public $theme;
+
 
     public static string $template = 'bs-4';
 

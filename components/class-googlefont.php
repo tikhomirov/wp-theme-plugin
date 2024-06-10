@@ -4,6 +4,12 @@ namespace theme_plugin\components;
 
 class GoogleFont
 {
+    public $file;
+    public $url;
+    public $font;
+    public $assets;
+    public $ver;
+
     public function __construct() {
         $this->file = WP_THEME_PLUGIN;
         $this->url = plugin_dir_url($this->file);
