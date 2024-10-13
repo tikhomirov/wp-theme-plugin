@@ -1,0 +1,15 @@
+{
+  "name": "rwsite/wp-theme-plugin",
+  "description": "WP Theme extension plugin",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "type": "wordpress-plugin",
+  "authors": [
+    {
+      "name": "Aleksei Tikhomirov",
+      "email": "alex@rwsite.ru"
+    }
+  ],
+  "require": {
+  }
+}
