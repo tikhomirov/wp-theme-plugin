@@ -22,8 +22,19 @@ $primary: #ee585f;
 
       list-style: none;
       margin: 0;
-      border-radius: .3rem;
+      border-radius: 0.3rem;
       padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      flex-direction: row;
+      align-content: center;
+      flex-wrap: nowrap;
+      align-items: center;
+      width: 100%;
+
+      .list-item-content {
+        width: 70%;
+      }
 
       &:hover{
         background: #f8f9fa;
@@ -44,7 +55,7 @@ $primary: #ee585f;
         }
       }
 
-      a.remove.remove_from_cart_button {
+      a.remove {
         float: left;
         display: block;
         font-size: 1.2em;
@@ -56,6 +67,15 @@ $primary: #ee585f;
         color: #f76565;
         &:hover{
           color: #cb2d24;
+        }
+        button{
+          display: block;
+          font-size: 1.2em;
+          line-height: 0.5;
+          border-radius: 8rem;
+          padding: 4px;
+          margin: 0 10px 0 0;
+          text-decoration: none;
         }
       }
     }

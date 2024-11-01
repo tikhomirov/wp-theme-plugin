@@ -18,7 +18,6 @@ class MenuCart
     public $dir;
     public $theme;
 
-
     public static string $template = 'bs-4';
 
 	/**

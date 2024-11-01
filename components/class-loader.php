@@ -34,7 +34,7 @@ class Loader
                 height: 100%;
                 -webkit-transition: all .4s .2s ease-in-out;
                 transition: all .4s .2s ease-in-out;
-                background-color: rgba(255, 255, 255, 0.86);
+                background-color: #fff;
                 opacity: 0;
                 visibility: hidden;
                 z-index: 9999;
