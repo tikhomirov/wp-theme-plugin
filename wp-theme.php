@@ -3,7 +3,7 @@
  * Plugin Name:     WP Theme plugin
  * Plugin URL:      https://rwsite.ru
  * Description:     WP Theme plugin
- * Version:         1.0.0
+ * Version:         1.0.1
  * Text Domain:     wp-theme
  * Domain Path:     /languages
  * Author:          Aleksey Tikhomirov <alex@rwsite.ru>

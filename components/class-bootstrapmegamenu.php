@@ -12,7 +12,7 @@ class BootstrapMegaMenu extends Plugin
     public string $url;
     public string $assets;
     public string|int $ver;
-    public \Log1x\Navi\Navi $navigation;
+    public $navigation;
     public mixed $icons;
 
     public function __construct()
@@ -25,7 +25,7 @@ class BootstrapMegaMenu extends Plugin
 
     public function add_actions():void
     {
-        $this->navigation = \Log1x\Navi\Navi::make()->withDefaultClasses()->build('primary');
+        $this->navigation = \theme_plugin\classes\Navi::make()->withDefaultClasses()->build('primary');
         $this->icons = require_once dirname(__DIR__) . '/data/icons.php';
 
         add_action('wp_footer', [$this, 'js'], 99);
@@ -165,9 +165,7 @@ class BootstrapMegaMenu extends Plugin
         <?php foreach ($item->children ?? [] as $child) : ?>
             <li class="<?= $child->classes; ?> <?= $child->children ? 'dropdown' : '' ?> <?= $child->active ? 'current-item' : ''; ?>">
 
-                <a href="<?= $child->url; ?>"
-                   class="dropdown-item <?= $child->children ? 'dropdown-toggle' : '' ?>"
-                >
+                <a href="<?= $child->url; ?>" class="dropdown-item <?= $child->children ? 'dropdown-toggle' : '' ?>">
                     <?php
                     $icon = get_post_meta( $child->id, '_menu_item_icon', true );
                     $icon_html = $icon ? '<i class="' . esc_attr($icon) . '"></i> ' : '';
