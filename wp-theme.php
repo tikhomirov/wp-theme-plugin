@@ -17,6 +17,7 @@
 
 namespace theme_plugin;
 
+use theme_plugin\components\BootstrapMegaMenu;
 use theme_plugin\components\GoogleFont;
 use theme_plugin\components\Loader;
 use theme_plugin\components\MenuCart;
@@ -25,6 +26,7 @@ use theme_plugin\components\Modal;
 use theme_plugin\components\Panel;
 use theme_plugin\components\Progressbar;
 use theme_plugin\components\ToTop;
+use theme_plugin\debugger\Logger;
 
 defined('ABSPATH') || die();
 
@@ -44,18 +46,38 @@ spl_autoload_register( function ( $full_class_name ) {
     $class_file    = 'class-' . array_pop( $class_parts ) . '.php';
     $class_parts[] = $class_file;
 
-    require_once plugin_dir_path( __FILE__ ) . implode( DIRECTORY_SEPARATOR, $class_parts );
+    if(file_exists(plugin_dir_path( __FILE__ ) . implode( DIRECTORY_SEPARATOR, $class_parts ))) {
+        require_once plugin_dir_path(__FILE__).implode(DIRECTORY_SEPARATOR,
+                $class_parts);
+    } else {
+        echo 'FATAL ERROR: File not found by path: ';
+        echo '<pre>';
+        var_dump(plugin_dir_path( __FILE__ ) . implode( DIRECTORY_SEPARATOR, $class_parts ));
+        echo '</pre>';
+        die();
+    }
 } );
 
 
 require_once 'functions.php';
 
+Logger::$logPath = plugin_dir_path( __FILE__ ) . 'log.log';
+
 (new Loader())->add_actions();
+
 //(new Modal())->add_actions();
 (new GoogleFont())->add_actions();
+
 MenuCart::$template = 'bs-5';
 (new MenuCart())->add_action();
+
 // (new Panel())->add_actions();
 (new ToTop())->add_actions();
+
 (new Progressbar())->add_actions();
-add_action('init' , [new MenuField(), 'add_actions']);
+
+add_action('init' , function() {
+    (new BootstrapMegaMenu())->add_actions();
+});
+
+// add_action('init' , [new MenuField(), 'add_actions']);

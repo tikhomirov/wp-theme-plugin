@@ -25,3 +25,33 @@ add_action( 'woocommerce_before_template_part', function ( $name, $path, $locate
 		wp_safe_redirect( '/?' . $query );
 	}
 }, 10, 4 );
+
+
+add_filter('login_headertext', function () {
+    return get_bloginfo('name');
+});
+
+add_action('login_head', function () {
+    ?>
+    <style>
+        #login h1 a {
+            background-image: none;
+            text-indent: 0;
+            height: auto;
+            width: auto;
+        }
+    </style>
+    <?php
+});
+
+
+function dd($data)
+{
+    \theme_plugin\debugger\Logger::pre($data);
+    wp_die();
+}
+
+function dump($data)
+{
+    \theme_plugin\debugger\Logger::pre($data);
+}
