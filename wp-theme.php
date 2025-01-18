@@ -3,7 +3,7 @@
  * Plugin Name:     WP Theme components plugin
  * Plugin URL:      https://rwsite.ru
  * Description:     Components for Bootstrap 5 framework WordPress themes.
- * Version:         1.0.2
+ * Version:         1.0.3
  * Text Domain:     wp-theme
  * Domain Path:     /languages
  * Author:          Aleksey Tikhomirov <alex@rwsite.ru>
@@ -22,12 +22,10 @@ use theme_plugin\components\BootstrapMegaMenu;
 use theme_plugin\components\GoogleFont;
 use theme_plugin\components\IconFont;
 use theme_plugin\components\Loader;
+use theme_plugin\components\Logger;
 use theme_plugin\components\MenuCart;
-use theme_plugin\components\MenuField;
-use theme_plugin\components\Modal;
 use theme_plugin\components\Progressbar;
 use theme_plugin\components\ToTop;
-use theme_plugin\debugger\Logger;
 
 defined('ABSPATH') || die();
 
@@ -92,10 +90,10 @@ add_action('init', function () {
     // post load progress bar
     (new Progressbar())->add_actions();
 
-    // Bootstrap dropdown menu feature/fix
+    // Bootstrap dropdown menu feature/fix. do_action( 'print_menu' );
     (new BootstrapMegaMenu())->add_actions();
 
-    // Menu html cache in option
+    // Menu html cache in option for BootstrapNavWalker. Unused now
     (new MenuCache())->add_actions();
 
 });

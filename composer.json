@@ -1,6 +1,6 @@
 {
   "name": "rwsite/wp-theme-plugin",
-  "description": "WP Theme extension plugin",
+  "description": "WP BS5 theme extensions",
   "minimum-stability": "stable",
   "license": "proprietary",
   "type": "wordpress-plugin",

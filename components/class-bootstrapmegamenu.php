@@ -2,6 +2,8 @@
 /**
  * BS 5 multilevel menu
  * https://github.com/kmlpandey77/bootnavbar/tree/master?tab=readme-ov-file
+ *
+ * How to use: do_action( 'print_menu' );
  */
 
 namespace theme_plugin\components;
@@ -14,8 +16,8 @@ class BootstrapMegaMenu extends Plugin
     public string $url;
     public string $assets;
     public string $ver;
-    public $navigation;
-    public mixed $icons;
+    public ?Navi $navigation = null;
+    public ?array $icons = null;
 
     public function __construct()
     {
@@ -32,7 +34,7 @@ class BootstrapMegaMenu extends Plugin
 
         add_action('wp_footer', [$this, 'js'], 99);
         add_action('wp_enqueue_scripts', [$this, 'css'], 9);
-        add_action('print_menu', [$this, 'wp_nav_menu']);
+        add_action('print_menu', fn() => print($this->wp_nav_menu()));
 
         if(!is_admin()){
             return;
@@ -43,7 +45,7 @@ class BootstrapMegaMenu extends Plugin
         add_filter( 'nav_menu_link_attributes', [$this, 'my_wp_nav_menu_link_attributes'], 10, 3 );
 
         // 2. Добавление пользовательского поля выбора сайдбара
-        add_action('wp_nav_menu_item_custom_fields', [$this, 'choose_sidebar'], 10, 4);
+        // add_action('wp_nav_menu_item_custom_fields', [$this, 'choose_sidebar'], 10, 4);
 
         add_action('admin_enqueue_scripts', function () {
             wp_enqueue_style( 'simple-line-icons', 'https://cdn.jsdelivr.net/npm/simple-line-icons@2.5.5/css/simple-line-icons.css' );
@@ -146,8 +148,14 @@ class BootstrapMegaMenu extends Plugin
         <?php
     }
 
-    public function wp_nav_menu()
+    public function wp_nav_menu():string
     {
+        $key = md5(json_encode($this->navigation->all()));
+        $menu = wp_cache_get($key);
+        if(!empty($menu)){
+            return $menu . '<!-- cached menu -->';
+        }
+        ob_start();
         ?>
         <ul class="nav nav-pills col-12 col-lg-8 me-lg-auto mb-2 justify-content-center align-items-center mb-md-0">
             <?php foreach ( $this->navigation->all() as $item ) : ?>
@@ -171,6 +179,9 @@ class BootstrapMegaMenu extends Plugin
             <?php endforeach; ?>
         </ul>
         <?php
+        $menu = ob_get_clean();
+        wp_cache_set($key, $menu);
+        return $menu;
     }
 
     public function dropdown_menu($item, $sidebar = null)
@@ -345,7 +356,7 @@ class BootstrapMegaMenu extends Plugin
 
     public function my_wp_nav_menu_link_attributes( $atts, $item, $args ) {
         $icon = get_post_meta( $item->ID, '_menu_item_icon', true );
-        if ( $icon ) {
+        if ( !empty($icon) ) {
             $atts['class'] .= ' menu-item-has-icon';
             $atts['data-icon'] = $icon;
         }
@@ -359,7 +370,6 @@ class BootstrapMegaMenu extends Plugin
 
         // Получаем текущее значение сайдбара из метаданных
         $sidebar = get_post_meta($item_id, '_menu_item_sidebar', true);
-
         echo '<div class="field-sidebar">';
         echo '<label for="edit-menu-item-sidebar-' . $item_id . '">Выберите сайдбар:</label>';
         echo '<select id="edit-menu-item-sidebar-' . $item_id . '" name="menu-item-sidebar[' . $item_id . ']">';

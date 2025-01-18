@@ -17,7 +17,7 @@ class MenuCache {
 	public function add_actions() {
 		add_filter( 'pre_wp_nav_menu', [ $this, 'pre_wp_nav_menu' ], 10, 2 );
 		add_filter( 'wp_nav_menu', [ $this, 'maybe_cache_nav_menu' ], 10, 2 );
-		add_action( 'wp_update_nav_menu', [ $this, 'clear_caches' ] );
+		add_action( 'wp_update_nav_menu', [ $this, 'clear_caches' ],10 ,2 );
 	}
 
 	private function get_cache_key( $args ): string
@@ -38,7 +38,12 @@ class MenuCache {
 		return null;
 	}
 
-	public function clear_caches($menu_id, $menu_data) {
+    /**
+     * @param int|string $menu_id
+     * @param array|null $menu_data
+     * @return void
+     */
+	public function clear_caches( $menu_id = null, $menu_data = null ) {
 		delete_option( '%'.static::CACHE_KEY.'%' );
 	}
 }

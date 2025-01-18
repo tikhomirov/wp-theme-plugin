@@ -1,6 +1,6 @@
 # WordPress Theme Plugin
     
-This plugin added features to **Bootstrap 5** themes:
+### This plugin added features to **Bootstrap 5** themes:
 
 - WooCommerce Menu cart in navbar
 - Modal windows
@@ -11,3 +11,11 @@ This plugin added features to **Bootstrap 5** themes:
   - Multi drop-down menu
   - Cache html output to option in DB
 - ... something else in dev process
+
+# Structure
+
+- assets - css, fonts, js
+- classes - libs, classes
+- components - WordPress plugin component
+- data - additional data files
+- debugger
