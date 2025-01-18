@@ -18,4 +18,4 @@
 - classes - libs, classes
 - components - WordPress plugin component
 - data - additional data files
-- debugger
+- templates - html files
