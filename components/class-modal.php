@@ -252,38 +252,41 @@ class Modal {
                     $('#modal_thx').modal('show');
 				<?php endif;?>
 
-                $('theme-data-product]').each(function(){
-                    $(this).click(function (e) {
-                        //console.log('lesson-checkout clocked')
-                        e.preventDefault();
-                        let product_id = $(this).data('product');
+                if ($('[data-theme-data-product]').length) {
+                    $('[data-theme-data-product]').each(function () {
+                        $(this).click(function (e) {
+                            //console.log('lesson-checkout clocked')
+                            e.preventDefault();
+                            let product_id = $(this).data('product');
 
-                        preloader.addClass('active').show();
-                        // AJAX request
-                        $.ajax({
-                            url: '<?= admin_url( 'admin-ajax.php', 'relative' ); ?>',
-                            data: {
-                                action: 'wc_lessons',
-                                'product_id': product_id,
-                                _nonce: '<?= wp_create_nonce( 'wc_lesson' ); ?>'
-                            },
-                            type: 'POST',
-                            success: function (response) {
-                                //console.log(response);
-                                preloader.removeClass('active').hide();
-                                if (false === response.success) {
-                                    $('#modal_checkout .modal-body').html(response.data);
-                                } else {
-                                    // Add response in Modal body
-                                    $('#modal_checkout .modal-body').html(response);
-                                    // Display Modal
-                                    $('#modal_checkout').modal('show');
+                            preloader.addClass('active').show();
+                            // AJAX request
+                            $.ajax({
+                                url: '<?= admin_url('admin-ajax.php', 'relative'); ?>',
+                                data: {
+                                    action: 'wc_lessons',
+                                    'product_id': product_id,
+                                    _nonce: '<?= wp_create_nonce('wc_lesson'); ?>'
+                                },
+                                type: 'POST',
+                                success: function (response) {
+                                    //console.log(response);
+                                    preloader.removeClass('active').hide();
+                                    if (false === response.success) {
+                                        $('#modal_checkout .modal-body').html(response.data);
+                                    } else {
+                                        // Add response in Modal body
+                                        $('#modal_checkout .modal-body').html(response);
+                                        // Display Modal
+                                        $('#modal_checkout').modal('show');
+                                    }
+                                    show_login();
                                 }
-                                show_login();
-                            }
+                            });
                         });
                     });
-                });
+                }
+
 
                 function show_login() {
                     $('.showlogin').on('click', function (e) {

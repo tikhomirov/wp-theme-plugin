@@ -18,10 +18,7 @@
  */
 
 
-
-
 // Check if Class Exists.
-
 if (!class_exists('WP_Bootstrap_Navwalker')) :
     class WP_Bootstrap_Navwalker extends Walker_Nav_Menu
     {
@@ -41,11 +38,8 @@ if (!class_exists('WP_Bootstrap_Navwalker')) :
          */
         public function __construct()
         {
-            if (!has_filter('wp_nav_menu_args',
-                array($this, 'add_schema_to_navbar_ul'))
-            ) {
-                add_filter('wp_nav_menu_args',
-                    array($this, 'add_schema_to_navbar_ul'));
+            if (!has_filter('wp_nav_menu_args', [$this, 'add_schema_to_navbar_ul'])) {
+                add_filter('wp_nav_menu_args', [$this, 'add_schema_to_navbar_ul']);
             }
         }
 

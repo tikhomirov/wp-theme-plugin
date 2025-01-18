@@ -9,7 +9,6 @@ use Exception;
 
 class Logger
 {
-
     public static string $logPath = '';
 
     private function __clone()
@@ -73,7 +72,7 @@ class Logger
     /**
      * Writes log data to file
      *
-     * @param mixed $data
+     * @param  mixed  $data
      * @param  bool  $detail  - use var_dump instead var_export
      *
      * @throws Exception

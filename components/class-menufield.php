@@ -61,7 +61,6 @@ class MenuField
             $size = $data['size'] ?? 'wide';
 
             if(class_exists('WP_Field')){
-
                 WP_Field::make([
                     [
                         'id'      => $item_id, // 'menu-item-'.

@@ -6,12 +6,14 @@
 
 namespace theme_plugin\components;
 
+use theme_plugin\classes\Navi;
+
 class BootstrapMegaMenu extends Plugin
 {
     public string $file;
     public string $url;
     public string $assets;
-    public string|int $ver;
+    public string $ver;
     public $navigation;
     public mixed $icons;
 
@@ -25,7 +27,7 @@ class BootstrapMegaMenu extends Plugin
 
     public function add_actions():void
     {
-        $this->navigation = \theme_plugin\classes\Navi::make()->withDefaultClasses()->build('primary');
+        $this->navigation = Navi::make()->withDefaultClasses()->build('primary');
         $this->icons = require_once dirname(__DIR__) . '/data/icons.php';
 
         add_action('wp_footer', [$this, 'js'], 99);
@@ -57,13 +59,13 @@ class BootstrapMegaMenu extends Plugin
     {
         ?>
         <script>
-            (function($) {
+            jQuery(document).ready(function () {
 
                 // Select the <html> element
-                var html = document.querySelectorAll('html')[0];
+                let html = document.querySelectorAll('html')[0];
 
                 // Select the first element with the attribute 'data-bs-toggle-theme'
-                var themeToggle = document.querySelectorAll('*[data-bs-toggle-theme]')[0];
+                let themeToggle = document.querySelectorAll('*[data-bs-toggle-theme]')[0];
 
                 // Set the default theme to 'dark' for the <html> element
                 html.setAttribute('data-bs-theme', 'dark');
@@ -71,7 +73,7 @@ class BootstrapMegaMenu extends Plugin
                 // Check if a themeToggle element is found
                 if (themeToggle) {
                     // Add a click event listener to the themeToggle element
-                    themeToggle.addEventListener('click', function(event) {
+                    themeToggle.addEventListener('click', function (event) {
                         // Prevent the default behavior of the click event
                         event.preventDefault();
 
@@ -87,46 +89,59 @@ class BootstrapMegaMenu extends Plugin
                 }
 
                 function bootnavbar(options) {
-                        const defaultOption = {
-                            selector: "main-nav",
-                            animation: true,
-                            animateIn: "animate__fadeIn",
-                        };
 
-                        const bnOptions = { ...defaultOption, ...options };
+                    const defaultOption = {
+                        selector: "main-nav",
+                        animation: true,
+                        animateIn: "animate__fadeIn",
+                    };
 
-                        init = function () {
-                            var dropdowns = document
-                                .getElementById(bnOptions.selector)
-                                .getElementsByClassName("dropdown");
+                    const bnOptions = {...defaultOption, ...options};
 
-                            Array.prototype.forEach.call(dropdowns, (item) => {
-                                //add animation
-                                if (bnOptions.animation) {
-                                    const element = item.querySelector(".dropdown-menu");
+                    init = function () {
+                        var dropdowns = document.getElementById(bnOptions.selector);
+
+                        if (!dropdowns) {
+                            console.error(`Element with ID ${bnOptions.selector} not found.`);
+                            return; // Прекращаем выполнение, если элемент не найден
+                        }
+
+                        var items = dropdowns.getElementsByClassName("dropdown");
+
+                        Array.prototype.forEach.call(items, (item) => {
+                            // Добавление анимации
+                            if (bnOptions.animation) {
+                                const element = item.querySelector(".dropdown-menu");
+                                if (element) { // Проверяем, существует ли элемент
                                     element.classList.add("animate__animated");
                                     element.classList.add(bnOptions.animateIn);
                                 }
+                            }
 
-                                //hover effects
-                                item.addEventListener("mouseover", function () {
-                                    this.classList.add("show");
-                                    const element = this.querySelector(".dropdown-menu");
+                            // Эффекты наведения
+                            item.addEventListener("mouseover", function () {
+                                this.classList.add("show");
+                                const element = this.querySelector(".dropdown-menu");
+                                if (element) {
                                     element.classList.add("show");
-                                });
-
-                                item.addEventListener("mouseout", function () {
-                                    this.classList.remove("show");
-                                    const element = this.querySelector(".dropdown-menu");
-                                    element.classList.remove("show");
-                                });
+                                }
                             });
-                        };
 
-                        init();
-                    }
-                new bootnavbar();
-            })(jQuery);
+                            item.addEventListener("mouseout", function () {
+                                this.classList.remove("show");
+                                const element = this.querySelector(".dropdown-menu");
+                                if (element) {
+                                    element.classList.remove("show");
+                                }
+                            });
+                        });
+                    };
+
+                    init();
+                }
+
+                bootnavbar();
+            });
         </script>
         <?php
     }

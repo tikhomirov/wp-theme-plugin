@@ -1,10 +1,10 @@
 <?php
-
-use theme_plugin\components\MenuCart;
-
 /**
  * Simple functions
  */
+
+use theme_plugin\components\MenuCart;
+
 function get_mini_cart(){
 	return MenuCart::add_to_cart_fragments()['.mini-cart'] ?? '';
 }
@@ -44,14 +44,17 @@ add_action('login_head', function () {
     <?php
 });
 
-
+if(!function_exists('dd')):
 function dd($data)
 {
     \theme_plugin\debugger\Logger::pre($data);
     wp_die();
 }
+endif;
 
+if(!function_exists('dump')):
 function dump($data)
 {
     \theme_plugin\debugger\Logger::pre($data);
 }
+endif;
