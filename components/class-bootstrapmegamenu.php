@@ -153,7 +153,7 @@ class BootstrapMegaMenu extends Plugin
         $key = md5(json_encode($this->navigation->all()));
         $menu = wp_cache_get($key);
         if(!empty($menu)){
-            return $menu . '<!-- cached menu -->';
+            return $menu . '<!-- #cached menu -->';
         }
         ob_start();
         ?>
@@ -186,6 +186,7 @@ class BootstrapMegaMenu extends Plugin
 
     public function dropdown_menu($item, $sidebar = null)
     {
+        // navmenu
         ?>
         <ul class="dropdown-menu">
         <?php foreach ($item->children ?? [] as $child) : ?>
