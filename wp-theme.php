@@ -24,6 +24,8 @@ use theme_plugin\components\IconFont;
 use theme_plugin\components\Loader;
 use theme_plugin\components\Logger;
 use theme_plugin\components\MenuCart;
+use theme_plugin\components\MenuField;
+use theme_plugin\components\Modal;
 use theme_plugin\components\Progressbar;
 use theme_plugin\components\ToTop;
 
