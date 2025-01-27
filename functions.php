@@ -47,7 +47,7 @@ add_action('login_head', function () {
 });
 
 if(!function_exists('dd')):
-function dd($data)
+function dd(...$data)
 {
     \theme_plugin\components\Logger::pre($data);
     wp_die();
@@ -55,7 +55,7 @@ function dd($data)
 endif;
 
 if(!function_exists('dump')):
-function dump($data)
+function dump(...$data)
 {
     \theme_plugin\components\Logger::pre($data);
 }

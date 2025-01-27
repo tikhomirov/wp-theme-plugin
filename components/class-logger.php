@@ -55,8 +55,9 @@ class Logger
      *
      * @return false|string|true
      */
-    private static function prepareData($data, $detail = false)
+    private static function prepareData(...$data)
     {
+	    $detail = false;
         if ($detail) {
             ob_start();
             var_dump($data);
@@ -77,11 +78,11 @@ class Logger
      *
      * @throws Exception
      */
-    public static function log($data, $detail = false): void
+    public static function log(...$data): void
     {
         self::checkLogPath();
         $record = '['.date('d.m.Y H:i:s').'] Log data: '.PHP_EOL
-            .self::prepareData($data, $detail).PHP_EOL;
+            .self::prepareData(...$data).PHP_EOL;
         file_put_contents(self::$logPath, $record, FILE_APPEND);
     }
 
@@ -113,9 +114,9 @@ EOT;
      * @param $data
      * @param  false  $detail  - use var_dump instead var_export
      */
-    public static function pre($data, $detail = false)
+    public static function pre(...$data)
     {
-        $record = self::prepareData($data, $detail);
+        $record = self::prepareData($data);
         echo <<< EOT
             <pre>$record</pre>
 EOT;
