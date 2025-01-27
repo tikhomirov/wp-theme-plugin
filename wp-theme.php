@@ -3,7 +3,7 @@
  * Plugin Name:     WP Theme components plugin
  * Plugin URL:      https://rwsite.ru
  * Description:     Components for Bootstrap 5 framework WordPress themes.
- * Version:         1.0.3
+ * Version:         1.0.4
  * Text Domain:     wp-theme
  * Domain Path:     /languages
  * Author:          Aleksey Tikhomirov <alex@rwsite.ru>
@@ -66,6 +66,11 @@ MenuCart::$template = 'bs-5';
  * Run list of features
  */
 add_action('init', function () {
+
+    // К этому скрипту подключаются все остальные inline css компоненты
+    add_action('wp_enqueue_scripts', function () {
+       wp_enqueue_style('wp-theme', plugin_dir_url(__FILE__).'assets/css/style.css', [], '1.0.0');
+    }, 1);
 
     // Modal windows example
     // (new Modal())->add_actions();

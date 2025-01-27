@@ -3,6 +3,7 @@
 namespace theme_plugin\components;
 
 class ToTop {
+
 	public function add_actions() {
 		add_action('wp_enqueue_scripts', [$this, 'scripts'], 9);
 		add_action('wp_footer', [$this, 'render_html']);

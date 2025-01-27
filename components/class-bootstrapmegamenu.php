@@ -61,7 +61,7 @@ class BootstrapMegaMenu extends Plugin
     {
         ?>
         <script>
-            jQuery(document).ready(function () {
+            jQuery(document).ready(function ($) {
 
                 // Select the <html> element
                 let html = document.querySelectorAll('html')[0];
@@ -92,6 +92,10 @@ class BootstrapMegaMenu extends Plugin
 
                 function bootnavbar(options) {
 
+                    if($('#main-nav').length < 1){
+                        return;
+                    }
+
                     const defaultOption = {
                         selector: "main-nav",
                         animation: true,
@@ -101,14 +105,14 @@ class BootstrapMegaMenu extends Plugin
                     const bnOptions = {...defaultOption, ...options};
 
                     init = function () {
-                        var dropdowns = document.getElementById(bnOptions.selector);
+                        let dropdowns = document.getElementById(bnOptions.selector);
 
                         if (!dropdowns) {
                             console.error(`Element with ID ${bnOptions.selector} not found.`);
                             return; // Прекращаем выполнение, если элемент не найден
                         }
 
-                        var items = dropdowns.getElementsByClassName("dropdown");
+                        let items = dropdowns.getElementsByClassName("dropdown");
 
                         Array.prototype.forEach.call(items, (item) => {
                             // Добавление анимации
