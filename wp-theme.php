@@ -88,7 +88,6 @@ add_action('init', function () {
     (new IconFont('simple-line-icons'))->add_actions();
 
     // menu cart
-
     (new MenuCart())->add_action();
 
     // to top button

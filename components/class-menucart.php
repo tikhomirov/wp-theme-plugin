@@ -66,23 +66,25 @@ class MenuCart
             return $fragments;
         }
 
+
         if (WC()->cart->get_cart_contents_count() > 0) {
+            // "C:\OSPanel6\home\woocommerce.loc\wp-content\plugins\wp-theme-plugin/templates/mini-cart/bs-5.php"
             $fragments['.mini-cart'] = load_template( self::get_env('dir') .'templates/mini-cart/'. self::get_env('theme') . '.php', false, compact('fragments' ) );
         } else {
-            $fragments['.mini-cart'] = '<div class="dropdown mini-cart"></div>';
+            $fragments['.mini-cart'] = load_template( self::get_env('dir') .'templates/mini-cart/empty.php', false, compact('fragments' ) );
         }
 
         return $fragments;
     }
 
     public static function get_menu(){
-        if(is_user_logged_in()):
+        // if(is_user_logged_in()):endif;
         ?>
-        <div class="nav-item">
-            <a class="menu-item nav-link" href="/my-account" style="padding: 0 10px; line-height: 1;">
+        <div class="nav-item mini-profile">
+            <a class="menu-item nav-link" href="<?= wc_get_page_permalink( 'myaccount' ) ?>" style="padding: 0 10px; line-height: 1;">
                 <i class="las la-user-circle"></i>
             </a>
         </div>
-        <?php endif;
+        <?php
     }
 }
