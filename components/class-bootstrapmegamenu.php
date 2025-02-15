@@ -18,23 +18,40 @@ class BootstrapMegaMenu extends Plugin
     public string $ver;
     public ?Navi $navigation = null;
     public ?array $icons = null;
+    public string $menu;
+    public array $settings;
+    public string $key;
 
-    public function __construct()
+    public function __construct($menu = 'primary')
     {
-        $this->file = WP_THEME_PLUGIN;
-        $this->url = plugin_dir_url($this->file);
-        $this->assets = $this->url . 'assets';
-        $this->ver = defined('WP_DEBUG') && WP_DEBUG ? time() : '1.0';
+        $this->file   = WP_THEME_PLUGIN;
+        $this->url    = plugin_dir_url($this->file);
+        $this->assets = $this->url . 'assets/';
+        $this->ver    = defined('WP_DEBUG') && WP_DEBUG ? time() : '1.0';
+        $this->menu   = $menu;
+        $this->settings = [ // for simple line icons
+            'use_cdn' => 'local', // yes, no, local
+        ];
     }
 
     public function add_actions():void
     {
-        $this->navigation = Navi::make()->withDefaultClasses()->build('primary');
+        $this->navigation = Navi::make()->withDefaultClasses()->build($this->menu);
         $this->icons = require_once dirname(__DIR__) . '/data/icons.php';
+        $this->key = md5(json_encode($this->navigation->all()));
 
         add_action('wp_footer', [$this, 'js'], 99);
         add_action('wp_enqueue_scripts', [$this, 'css'], 9);
         add_action('print_menu', fn() => print($this->wp_nav_menu()));
+
+        add_action('admin_enqueue_scripts', function () {
+            if('yes' === $this->settings['use_cdn']) {
+                wp_enqueue_style('simple-line-icons',
+                    'https://cdn.jsdelivr.net/npm/simple-line-icons@2.5.5/css/simple-line-icons.css');
+            } else if('local' === $this->settings['use_cdn']) {
+                wp_enqueue_style('simple-line-icons',$this->assets . 'css/simple-line-icons.css', false, $this->ver);
+            }
+        });
 
         if(!is_admin()){
             return;
@@ -45,16 +62,12 @@ class BootstrapMegaMenu extends Plugin
         add_filter( 'nav_menu_link_attributes', [$this, 'my_wp_nav_menu_link_attributes'], 10, 3 );
 
         // 2. Добавление пользовательского поля выбора сайдбара
-        // add_action('wp_nav_menu_item_custom_fields', [$this, 'choose_sidebar'], 10, 4);
-
-        add_action('admin_enqueue_scripts', function () {
-            wp_enqueue_style( 'simple-line-icons', 'https://cdn.jsdelivr.net/npm/simple-line-icons@2.5.5/css/simple-line-icons.css' );
-        });
+        add_action('wp_nav_menu_item_custom_fields', [$this, 'choose_sidebar'], 10, 4);
     }
 
     public function css(){
-        wp_enqueue_style('megamenu',$this->assets . '/css/megamenu.css', false, $this->ver);
-        wp_enqueue_style('animate',$this->assets . '/css/animate.css', false, $this->ver);
+        wp_enqueue_style('megamenu',$this->assets . 'css/megamenu.css', false, $this->ver);
+        wp_enqueue_style('animate',$this->assets . 'css/animate.css', false, $this->ver);
     }
 
     public function js()
@@ -90,63 +103,16 @@ class BootstrapMegaMenu extends Plugin
                     });
                 }
 
-                function bootnavbar(options) {
-
-                    if($('#main-nav').length < 1){
-                        return;
-                    }
-
-                    const defaultOption = {
-                        selector: "main-nav",
-                        animation: true,
-                        animateIn: "animate__fadeIn",
-                    };
-
-                    const bnOptions = {...defaultOption, ...options};
-
-                    init = function () {
-                        let dropdowns = document.getElementById(bnOptions.selector);
-
-                        if (!dropdowns) {
-                            console.error(`Element with ID ${bnOptions.selector} not found.`);
-                            return; // Прекращаем выполнение, если элемент не найден
-                        }
-
-                        let items = dropdowns.getElementsByClassName("dropdown");
-
-                        Array.prototype.forEach.call(items, (item) => {
-                            // Добавление анимации
-                            if (bnOptions.animation) {
-                                const element = item.querySelector(".dropdown-menu");
-                                if (element) { // Проверяем, существует ли элемент
-                                    element.classList.add("animate__animated");
-                                    element.classList.add(bnOptions.animateIn);
-                                }
-                            }
-
-                            // Эффекты наведения
-                            item.addEventListener("mouseover", function () {
-                                this.classList.add("show");
-                                const element = this.querySelector(".dropdown-menu");
-                                if (element) {
-                                    element.classList.add("show");
-                                }
-                            });
-
-                            item.addEventListener("mouseout", function () {
-                                this.classList.remove("show");
-                                const element = this.querySelector(".dropdown-menu");
-                                if (element) {
-                                    element.classList.remove("show");
-                                }
-                            });
-                        });
-                    };
-
-                    init();
-                }
-
-                bootnavbar();
+                document.querySelectorAll('.navbar .dropdown').forEach(function(everydropdown){
+                    everydropdown.addEventListener('shown.bs.dropdown', function () {
+                        el_overlay = document.createElement('span');
+                        el_overlay.className = 'screen-darken';
+                        document.body.appendChild(el_overlay)
+                    });
+                    everydropdown.addEventListener('hide.bs.dropdown', function () {
+                        document.body.removeChild(document.querySelector('.screen-darken'));
+                    });
+                });
             });
         </script>
         <?php
@@ -154,14 +120,13 @@ class BootstrapMegaMenu extends Plugin
 
     public function wp_nav_menu():string
     {
-        $key = md5(json_encode($this->navigation->all()));
-        $menu = wp_cache_get($key);
+        $menu = wp_cache_get($this->key);
         if(!empty($menu)){
             return $menu . '<!-- #cached menu -->';
         }
         ob_start();
         ?>
-        <ul class="nav nav-pills col-12 col-lg-8 me-lg-auto mb-2 justify-content-center align-items-center mb-md-0">
+        <ul class="nav nav-pills me-lg-auto mb-2 justify-content-center align-items-center mb-md-0">
             <?php foreach ( $this->navigation->all() as $item ) : ?>
                 <?php
                 $icon = get_post_meta( $item->id, '_menu_item_icon', true );
@@ -169,23 +134,47 @@ class BootstrapMegaMenu extends Plugin
                 $icon_html = $icon ? '<i class="' . esc_attr($icon) . '"></i> ' : '';
                 ?>
 
-                <li class="<?php echo $item->classes; ?> nav-item <?php if ( $item->children || $sidebar ) : ?>dropdown<?php endif; ?>">
+                <li class="<?php echo $item->classes; ?> nav-item
+                    <?php if ( $item->children || $sidebar ) : ?>dropdown<?php endif; ?>
+                    <?php if ( $sidebar ) : ?> position-static<?php endif; ?>
+                ">
 
-                    <a href="<?php echo $item->url; ?>"
+                    <a
+                       id="<?= $item->id ?>"
+                       href="<?php echo $item->url; ?>"
                        class="nav-link <?php echo $item->active || $item->activeParent ? 'active' : ''; ?>
-                       <?php if ( $item->children || $sidebar) : ?>dropdown-toggle<?php endif; ?>"
+                       <?php if ( $item->children || $sidebar  ) : ?>dropdown-item dropdown-toggle<?php endif; ?>
+                       "
                     >
                         <?php echo $icon_html . $item->label; ?>
                     </a>
 
-                   <?php if ($item->children || $sidebar) : $this->dropdown_menu($item, $sidebar); endif; ?>
+                   <?php
+                   if ($item->children) :
+                       $this->dropdown_menu($item, $sidebar);
+                   elseif($sidebar):
+                       $this->mega_menu($item, $sidebar);
+                   endif; ?>
                 </li>
             <?php endforeach; ?>
         </ul>
         <?php
         $menu = ob_get_clean();
-        wp_cache_set($key, $menu);
+        wp_cache_set($this->key, $menu);
         return $menu;
+    }
+
+    public function mega_menu($item, $sidebar)
+    {
+        ?>
+        <div class="dropdown-menu megamenu w-100 position-absolute fadeIn" aria-labelledby="<?= $item->id ?>">
+            <div class="container-fluid">
+                <!-- rows content -->
+                <?php echo do_shortcode('[custom_sidebars id=\'megamenu\']'); ?>
+                <!-- #end rows -->
+            </div>
+        </div>
+        <?php
     }
 
     public function dropdown_menu($item, $sidebar = null)
@@ -347,6 +336,7 @@ class BootstrapMegaMenu extends Plugin
     }
 
     public function my_wp_update_nav_menu_item( $menu_id, $menu_item_db_id, $args ) {
+
         if ( isset( $_REQUEST['menu-item-icon'][$menu_item_db_id] ) ) {
             update_post_meta( $menu_item_db_id, '_menu_item_icon', sanitize_text_field( $_REQUEST['menu-item-icon'][$menu_item_db_id] ) );
         }
@@ -357,6 +347,8 @@ class BootstrapMegaMenu extends Plugin
         } else {
             delete_post_meta($menu_item_db_id, '_menu_item_sidebar');
         }
+
+        wp_cache_delete($this->key);
     }
 
     public function my_wp_nav_menu_link_attributes( $atts, $item, $args ) {

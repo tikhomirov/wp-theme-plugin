@@ -46,6 +46,11 @@ add_action('login_head', function () {
     <?php
 });
 
+add_action('clean_menu_cache', 'clean_menu_cache');
+function clean_menu_cache() {
+
+}
+
 if(!function_exists('dd')):
 function dd(...$data)
 {

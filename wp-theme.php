@@ -11,8 +11,9 @@
  *
  * Tags:            theme feature
  * Requires at least: 5.6
- * Tested up to:    5.9.0
- * Requires PHP:    8.0+
+ * Tested up to:     5.9.0
+ * Requires PHP:     8.0+
+ * Requires Plugins: wp-custom-sidebars-plugin
  */
 
 namespace theme_plugin;
@@ -97,6 +98,7 @@ add_action('init', function () {
     (new Progressbar())->add_actions();
 
     // Bootstrap dropdown menu feature/fix. do_action( 'print_menu' );
+    // required wp-custom-sidebar-plugin
     (new BootstrapMegaMenu())->add_actions();
 
     // Menu html cache in option for BootstrapNavWalker. Unused now
