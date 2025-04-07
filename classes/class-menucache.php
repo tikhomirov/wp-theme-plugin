@@ -5,6 +5,8 @@
 
 namespace theme_plugin\classes;
 
+use stdClass;
+
 class MenuCache {
 
 	public const CACHE_KEY = 'menu_cache';
@@ -25,7 +27,7 @@ class MenuCache {
 		return static::CACHE_KEY . md5( serialize( $args ) );
 	}
 
-	public function maybe_cache_nav_menu( string $menu, \stdClass $args ) {
+	public function maybe_cache_nav_menu( string $menu, stdClass $args ) {
 		set_transient( $this->get_cache_key((array)$args), $menu, $this->cache_time );
 		return $menu;
 	}

@@ -3,6 +3,7 @@
  * Simple functions
  */
 
+use theme_plugin\components\Logger;
 use theme_plugin\components\MenuCart;
 
 function get_mini_cart(){
@@ -54,7 +55,7 @@ function clean_menu_cache() {
 if(!function_exists('dd')):
 function dd(...$data)
 {
-    \theme_plugin\components\Logger::pre($data);
+    Logger::pre($data);
     wp_die();
 }
 endif;
@@ -62,6 +63,6 @@ endif;
 if(!function_exists('dump')):
 function dump(...$data)
 {
-    \theme_plugin\components\Logger::pre($data);
+    Logger::pre($data);
 }
 endif;

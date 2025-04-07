@@ -19,6 +19,8 @@
 
 
 // Check if Class Exists.
+use theme_plugin\components\WP_Nav_Menu_Item;
+
 if (!class_exists('WP_Bootstrap_Navwalker')) :
     class WP_Bootstrap_Navwalker extends Walker_Nav_Menu
     {
@@ -48,7 +50,7 @@ if (!class_exists('WP_Bootstrap_Navwalker')) :
          *
          * @param  string  $output  Used to append additional content (passed by reference).
          * @param  int  $depth  Depth of menu item. Used for padding.
-         * @param  \WP_Nav_Menu_Args  $args  An object of wp_nav_menu() arguments.
+         * @param  WP_Nav_Menu_Args  $args  An object of wp_nav_menu() arguments.
          *
          * @see Walker_Nav_Menu::start_lvl()
          *
@@ -109,7 +111,7 @@ if (!class_exists('WP_Bootstrap_Navwalker')) :
          * Starts the element output.
          *
          * @param  string  $output  Used to append additional content (passed by reference).
-         * @param  \theme_plugin\components\WP_Nav_Menu_Item  $item  Menu item data object.
+         * @param  WP_Nav_Menu_Item  $item  Menu item data object.
          * @param  int  $depth  Depth of menu item. Used for padding.
          * @param  WP_Nav_Menu_Args  $args  An object of wp_nav_menu() arguments.
          * @param  int  $id  Current item ID.
@@ -179,7 +181,7 @@ if (!class_exists('WP_Bootstrap_Navwalker')) :
              * Filters the arguments for a single nav menu item.
              *
              * @param  WP_Nav_Menu_Args  $args  An object of wp_nav_menu() arguments.
-             * @param  \theme_plugin\components\WP_Nav_Menu_Item  $item  Menu item data object.
+             * @param  WP_Nav_Menu_Item  $item  Menu item data object.
              * @param  int  $depth  Depth of menu item. Used for padding.
              *
              * @since WP 4.4.0
@@ -215,7 +217,7 @@ if (!class_exists('WP_Bootstrap_Navwalker')) :
              * Filters the ID applied to a menu item's list item element.
              *
              * @param  string  $menu_id  The ID that is applied to the menu item's `<li>` element.
-             * @param  \theme_plugin\components\WP_Nav_Menu_Item  $item  The current menu item.
+             * @param  WP_Nav_Menu_Item  $item  The current menu item.
              * @param  WP_Nav_Menu_Args  $args  An object of wp_nav_menu() arguments.
              * @param  int  $depth  Depth of menu item. Used for padding.
              *
@@ -318,8 +320,8 @@ if (!class_exists('WP_Bootstrap_Navwalker')) :
              * Filters a menu item's title.
              *
              * @param  string  $title  The menu item's title.
-             * @param  \WP_Nav_Menu_Item  $item  The current menu item.
-             * @param  \WP_Nav_Menu_Args  $args  An object of wp_nav_menu() arguments.
+             * @param  WP_Nav_Menu_Item  $item  The current menu item.
+             * @param  WP_Nav_Menu_Args  $args  An object of wp_nav_menu() arguments.
              * @param  int  $depth  Depth of menu item. Used for padding.
              *
              * @since WP 4.4.0
