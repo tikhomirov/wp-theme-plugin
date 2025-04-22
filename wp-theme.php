@@ -70,7 +70,7 @@ add_action('init', function () {
 
     // К этому скрипту подключаются все остальные inline css компоненты
     add_action('wp_enqueue_scripts', function () {
-       wp_enqueue_style('wp-theme', plugin_dir_url(__FILE__).'assets/css/style.css', [], '1.0.0');
+        wp_enqueue_style('wp-theme', plugin_dir_url(__FILE__).'assets/css/style.css', [], '1.0.0');
     }, 1);
 
     // Modal windows example

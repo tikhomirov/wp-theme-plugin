@@ -11,63 +11,8 @@ class Logger
 {
     public static string $logPath = '';
 
-    private function __clone()
-    {
-    }
-
     private function __construct()
     {
-    }
-
-    /**
-     * @throws Exception
-     */
-    private static function checkLogPath()
-    {
-        if (empty(self::$logPath)) {
-            throw new Exception('Empty logPath');
-        }
-    }
-
-    /**
-     * Returns backtrace data
-     *
-     * @return string
-     */
-    private static function trace(): string
-    {
-        $record = '';
-        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-        foreach ($backtrace as $key => $el) {
-            if ($key > 0) {
-                $record .= '#'.$key.' '.$el['class'].$el['type'].$el['function']
-                    .'() called at ['.$el['file'].':'.$el['line'].']'.PHP_EOL;
-            }
-        }
-        return $record;
-    }
-
-    /**
-     * Returns prepared data
-     *
-     * @param $data
-     * @param  false  $detail  - use var_dump instead var_export
-     *
-     * @return false|string|true
-     */
-    private static function prepareData(...$data)
-    {
-	    $detail = false;
-        if ($detail) {
-            ob_start();
-            var_dump($data);
-            $record = ob_get_clean();
-        } else {
-            ob_start();
-            var_export($data);
-            $record = ob_get_clean();
-        }
-        return rtrim($record);
     }
 
     /**
@@ -84,6 +29,39 @@ class Logger
         $record = '['.date('d.m.Y H:i:s').'] Log data: '.PHP_EOL
             .self::prepareData(...$data).PHP_EOL;
         file_put_contents(self::$logPath, $record, FILE_APPEND);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private static function checkLogPath()
+    {
+        if (empty(self::$logPath)) {
+            throw new Exception('Empty logPath');
+        }
+    }
+
+    /**
+     * Returns prepared data
+     *
+     * @param $data
+     * @param  false  $detail  - use var_dump instead var_export
+     *
+     * @return false|string|true
+     */
+    private static function prepareData(...$data)
+    {
+        $detail = false;
+        if ($detail) {
+            ob_start();
+            var_dump($data);
+            $record = ob_get_clean();
+        } else {
+            ob_start();
+            var_export($data);
+            $record = ob_get_clean();
+        }
+        return rtrim($record);
     }
 
     /**
@@ -135,6 +113,24 @@ EOT;
     }
 
     /**
+     * Returns backtrace data
+     *
+     * @return string
+     */
+    private static function trace(): string
+    {
+        $record = '';
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        foreach ($backtrace as $key => $el) {
+            if ($key > 0) {
+                $record .= '#'.$key.' '.$el['class'].$el['type'].$el['function']
+                    .'() called at ['.$el['file'].':'.$el['line'].']'.PHP_EOL;
+            }
+        }
+        return $record;
+    }
+
+    /**
      * Writes backtrace to browser console
      *
      * @param  null  $group
@@ -163,5 +159,9 @@ EOT;
         echo <<< EOT
             <pre>$record</pre>
 EOT;
+    }
+
+    private function __clone()
+    {
     }
 }
