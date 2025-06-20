@@ -13,7 +13,6 @@
  * Requires at least: 5.6
  * Tested up to:     5.9.0
  * Requires PHP:     8.0+
- * Requires Plugins: wp-custom-sidebars-plugin
  */
 
 namespace theme_plugin;
