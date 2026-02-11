@@ -35,6 +35,18 @@ class MenuCart
         $url = plugin_dir_url($file);
         $assets = $url.'assets';
         $ver = defined('WP_DEBUG') && WP_DEBUG ? time() : '1.0';
+
+        if (!defined('WP_DEBUG') || !WP_DEBUG) {
+            $mini_cart_css = plugin_dir_path($file) . 'assets/css/mini-cart.css';
+            $mini_cart_js = plugin_dir_path($file) . 'assets/js/mini-cart-ajax.js';
+
+            $css_mtime = file_exists($mini_cart_css) ? filemtime($mini_cart_css) : null;
+            $js_mtime = file_exists($mini_cart_js) ? filemtime($mini_cart_js) : null;
+
+            if (null !== $css_mtime || null !== $js_mtime) {
+                $ver = (string) max((int) $css_mtime, (int) $js_mtime);
+            }
+        }
         $dir = plugin_dir_path($file);
         $theme = static::$template;
 
@@ -58,16 +70,36 @@ class MenuCart
             return $fragments;
         }
 
-        if (WC()->cart->get_cart_contents_count() > 0) {
-            // "C:\OSPanel6\home\woocommerce.loc\wp-content\plugins\wp-theme-plugin/templates/mini-cart/bs-5.php"
-            $fragments['.mini-cart'] = load_template(self::get_env('dir').'templates/mini-cart/'.self::get_env('theme').'.php',
-                false, compact('fragments'));
-        } else {
-            $fragments['.mini-cart'] = load_template(self::get_env('dir').'templates/mini-cart/empty.php', false,
-                compact('fragments'));
+        if (!is_array($fragments)) {
+            $fragments = [];
         }
 
+        // Обновляем счетчик товаров
+        $cart_count = WC()->cart->get_cart_contents_count();
+        $fragments['.cart-count'] = '<span class="cart-count">' . $cart_count . '</span>';
+
+        $fragments['.mini-cart'] = static::render_mini_cart();
+
         return $fragments;
+    }
+
+    private static function render_mini_cart(): string
+    {
+        $dir = static::get_env('dir');
+        $theme = static::get_env('theme');
+        $template_path = rtrim($dir, '/\\') . '/templates/mini-cart/' . $theme . '.php';
+
+        ob_start();
+
+        if (file_exists($template_path)) {
+            include $template_path;
+        } else {
+            echo '<div class="navbar-nav mini-cart dropdown">';
+            echo '<span class="cart-count">' . (function_exists('WC') && !empty(WC()->cart) ? WC()->cart->get_cart_contents_count() : 0) . '</span>';
+            echo '</div>';
+        }
+
+        return (string) ob_get_clean();
     }
 
     public static function get_menu()
@@ -88,6 +120,15 @@ class MenuCart
         add_filter('woocommerce_add_to_cart_fragments', [self::class, 'add_to_cart_fragments'], 10, 1);
         add_action('wp_enqueue_scripts', function () {
             wp_enqueue_style('wp-theme-cart', $this->assets.'/css/mini-cart.css', false, $this->ver);
+            
+            // Подключаем JavaScript для AJAX обновлений
+            wp_enqueue_script(
+                'wp-theme-cart-ajax', 
+                $this->assets.'/js/mini-cart-ajax.js', 
+                ['jquery'], 
+                $this->ver, 
+                true
+            );
         });
     }
 }

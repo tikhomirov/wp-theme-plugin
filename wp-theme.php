@@ -2,17 +2,17 @@
 /**
  * Plugin Name:     WP Theme components plugin
  * Plugin URL:      https://rwsite.ru
- * Description:     Components for Bootstrap 5 framework WordPress themes.
- * Version:         1.0.4
+ * Description:     Components for Bootstrap 5 framework WordPress themes with full WooCommerce support.
+ * Version:         2.0.0
  * Text Domain:     wp-theme
  * Domain Path:     /languages
  * Author:          Aleksey Tikhomirov <alex@rwsite.ru>
  * Author URI:      https://rwsite.ru
  *
- * Tags:            theme feature
+ * Tags:            theme feature, bootstrap 5, woocommerce
  * Requires at least: 5.6
- * Tested up to:     5.9.0
- * Requires PHP:     8.0+
+ * Tested up to:     6.4
+ * Requires PHP:     8.0
  */
 
 namespace theme_plugin;
@@ -26,6 +26,9 @@ use theme_plugin\components\Logger;
 use theme_plugin\components\MenuCart;
 use theme_plugin\components\Progressbar;
 use theme_plugin\components\ToTop;
+use theme_plugin\src\Assets;
+use theme_plugin\src\Woo\WooCommerce_Setup;
+use theme_plugin\src\Admin\Admin_Page;
 
 defined('ABSPATH') || die();
 
@@ -38,21 +41,16 @@ spl_autoload_register(function ($full_class_name) {
     if (strpos($full_class_name, __NAMESPACE__) !== 0) {
         return;
     }
-    $full_class_name = strtolower(str_replace('_', '-', $full_class_name));
     $class_parts = explode('\\', $full_class_name);
     unset($class_parts[0]); // Unset the __NAMESPACE__.
 
-    $class_file = 'class-'.array_pop($class_parts).'.php';
-    $class_parts[] = $class_file;
+    $class_name = array_pop($class_parts);
+    $class_file = 'class-'.strtolower(str_replace('_', '-', $class_name)).'.php';
 
-    if (file_exists(plugin_dir_path(__FILE__).implode(DIRECTORY_SEPARATOR, $class_parts))) {
-        require_once plugin_dir_path(__FILE__).implode(DIRECTORY_SEPARATOR, $class_parts);
-    } else {
-        echo 'FATAL ERROR: File not found by path: ';
-        echo '<pre>';
-        var_dump(plugin_dir_path(__FILE__).implode(DIRECTORY_SEPARATOR, $class_parts));
-        echo '</pre>';
-        die();
+    $file_path = plugin_dir_path(__FILE__).implode(DIRECTORY_SEPARATOR, $class_parts).DIRECTORY_SEPARATOR.$class_file;
+
+    if (file_exists($file_path)) {
+        require_once $file_path;
     }
 });
 
@@ -67,16 +65,21 @@ MenuCart::$template = 'bs-5';
  */
 add_action('init', function () {
 
+    // Assets - Bootstrap 5 CSS/JS and theme styles
+    (new Assets())->add_actions();
+
+    // WooCommerce Bootstrap 5 integration
+    (new WooCommerce_Setup())->add_actions();
+
+    // Admin settings page
+    if (is_admin()) {
+        (new Admin_Page())->add_actions();
+    }
+
     // К этому скрипту подключаются все остальные inline css компоненты
     add_action('wp_enqueue_scripts', function () {
-        wp_enqueue_style('wp-theme', plugin_dir_url(__FILE__).'assets/css/style.css', [], '1.0.0');
-    }, 1);
-
-    // Modal windows example
-    // (new Modal())->add_actions();
-
-    // MegaMenu admin component. dev
-    // (new MenuField())->add_actions();
+        wp_enqueue_style('wp-theme', plugin_dir_url(__FILE__).'assets/css/style.css', ['bootstrap'], '2.0.0');
+    }, 10);
 
     // page loader
     (new Loader())->add_actions();
@@ -100,5 +103,4 @@ add_action('init', function () {
 
     // Menu html cache in option for BootstrapNavWalker. Unused now
     (new MenuCache())->add_actions();
-
 });
