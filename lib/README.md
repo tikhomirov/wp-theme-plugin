@@ -1,0 +1,519 @@
+# WP_Field v2.5.0 — Universal HTML Field Generator for WordPress
+
+Минималистичная, расширяемая библиотека для создания полей в WordPress с поддержкой:
+- **52 типов полей** (базовые, выборные, продвинутые, композитные, специализированные)
+- Системы зависимостей между полями (12 операторов, AND/OR)
+- Всех типов хранилищ (post meta, options, term meta, user meta, comment meta)
+- Встроенных WP компонентов (wp_editor, wp-color-picker, wp.media, CodeMirror)
+- Без внешних зависимостей (использует встроенные WP скрипты)
+
+## 🎯 Интерактивная демонстрация
+
+**Посмотрите все 52 типов полей в действии:**
+
+👉 **Инструменты → WP_Field Examples**  
+или  
+👉 `/wp-admin/tools.php?page=wp-field-examples`
+
+предварительно подключите example.php
+
+Страница включает:
+- ✅ Все типы полей с живыми примерами
+- ✅ Код для каждого поля
+- ✅ Демонстрацию системы зависимостей
+- ✅ Возможность сохранения и тестирования
+
+---
+
+## Быстрый старт
+
+```php
+// Простое текстовое поле
+WP_Field::make([
+    'id'    => 'shop_name',
+    'type'  => 'text',
+    'label' => 'Название магазина',
+]);
+
+// Select с зависимостью
+WP_Field::make([
+    'id'      => 'delivery_type',
+    'type'    => 'select',
+    'label'   => 'Тип доставки',
+    'options' => ['courier' => 'Курьер', 'pickup' => 'Самовывоз'],
+]);
+
+WP_Field::make([
+    'id'    => 'delivery_address',
+    'type'  => 'text',
+    'label' => 'Адрес доставки',
+    'dependency' => [
+        ['delivery_type', '==', 'courier'],
+    ],
+]);
+```
+
+## Использование
+
+### Базовый синтаксис
+
+```php
+WP_Field::make(array $field_config, bool $output = true, string $storage_type = 'post', int|string $storage_id = null);
+```
+
+### Параметры поля
+
+```php
+[
+    'id'                 => 'field_id',              // Обязательно
+    'type'               => 'text',                  // Обязательно
+    'label'              => 'Название',              // Обязательно
+    'name'               => 'custom_name',           // Переопределить name атрибут
+    'value'              => 'explicit_value',        // Явное значение
+    'default'            => 'default_value',         // Значение по умолчанию
+    'placeholder'        => 'Введите...',             // Placeholder
+    'class'              => 'regular-text',          // CSS класс
+    'desc'               => 'Описание поля',         // Описание
+    'readonly'           => false,                   // Только для чтения
+    'disabled'           => false,                   // Отключено
+    'custom_attributes'  => ['data-x' => 'y'],       // Кастомные атрибуты
+    'dependency'         => [                        // Условия видимости
+        ['field_id', '==', 'value'],
+        'relation' => 'AND',
+    ],
+]
+```
+
+### Типы хранилищ
+
+```php
+// Post meta (по умолчанию)
+WP_Field::make($field, true, 'post', $post_id);
+
+// Option
+WP_Field::make($field, true, 'options');
+
+// Term meta
+WP_Field::make($field, true, 'term', $term_id);
+
+// User meta
+WP_Field::make($field, true, 'user', $user_id);
+
+// Comment meta
+WP_Field::make($field, true, 'comment', $comment_id);
+```
+
+## Поддерживаемые типы полей (52)
+
+### Базовые (9)
+- `text` — текстовое поле
+- `password` — пароль
+- `email` — email
+- `url` — URL
+- `tel` — телефон
+- `number` — число
+- `range` — диапазон
+- `hidden` — скрытое поле
+- `textarea` — многострочный текст
+
+### Выборные (5)
+- `select` — выпадающий список
+- `multiselect` — множественный выбор
+- `radio` — радиокнопки
+- `checkbox` — одиночный чекбокс
+- `checkbox_group` — группа чекбоксов
+
+### Продвинутые (9)
+- `editor` — wp_editor
+- `media` — медиа (ID или URL)
+- `image` — изображение с preview
+- `file` — файл
+- `gallery` — галерея
+- `color` — color picker
+- `date` — дата
+- `time` — время
+- `datetime` — дата и время
+
+### Композитные (2)
+- `group` — вложенные поля
+- `repeater` — повторяющиеся элементы
+
+### Простые v2.1 (9)
+- `switcher` — переключатель вкл/выкл
+- `spinner` — счётчик с кнопками
+- `button_set` — группа кнопок для выбора
+- `slider` — ползунок с отображением значения
+- `heading` — заголовок
+- `subheading` — подзаголовок
+- `notice` — уведомление (info/success/warning/error)
+- `content` — произвольный HTML контент
+- `fieldset` — группировка полей с легендой
+
+### Средней сложности v2.2 (10)
+- `accordion` — аккордеон (свёртываемые секции)
+- `tabbed` — вкладки
+- `typography` — типография (шрифт, размер, вес, цвет)
+- `spacing` — отступы (margin/padding)
+- `dimensions` — размеры (width/height)
+- `border` — граница (стиль, цвет, ширина)
+- `background` — фон (цвет/изображение)
+- `link_color` — цвета для ссылок (normal/hover/active)
+- `color_group` — группа цветов
+- `image_select` — выбор из изображений
+
+### Высокой сложности v2.3 (8)
+- `code_editor` — редактор кода с подсветкой синтаксиса (CSS/JS/PHP/HTML)
+- `icon` — выбор иконки из библиотеки (Dashicons)
+- `map` — карта Google Maps с выбором координат
+- `sortable` — сортируемый список (drag & drop)
+- `sorter` — сортировщик с enabled/disabled колонками
+- `palette` — палитра цветов (визуальный выбор)
+- `link` — поле ссылки (URL + текст + target)
+- `backup` — экспорт/импорт настроек (JSON)
+
+## Примеры
+
+### Зависимости (Dependency)
+
+```php
+// Показать поле только если другое поле имеет значение
+WP_Field::make([
+    'id'    => 'courier_address',
+    'type'  => 'text',
+    'label' => 'Адрес доставки',
+    'dependency' => [
+        ['delivery_type', '==', 'courier'],
+    ],
+]);
+
+// Множественные условия (AND)
+WP_Field::make([
+    'id'    => 'special_field',
+    'type'  => 'text',
+    'label' => 'Специальное поле',
+    'dependency' => [
+        ['field1', '==', 'value1'],
+        ['field2', '!=', 'value2'],
+        'relation' => 'AND',
+    ],
+]);
+
+// Множественные условия (OR)
+WP_Field::make([
+    'id'    => 'notification',
+    'type'  => 'text',
+    'label' => 'Уведомление',
+    'dependency' => [
+        ['type', '==', 'sms'],
+        ['type', '==', 'email'],
+        'relation' => 'OR',
+    ],
+]);
+```
+
+### Repeater
+
+```php
+WP_Field::make([
+    'id'       => 'work_times',
+    'type'     => 'repeater',
+    'label'    => 'Время работы',
+    'min'      => 1,
+    'max'      => 7,
+    'add_text' => 'Добавить день',
+    'fields'   => [
+        [
+            'id'      => 'day',
+            'type'    => 'select',
+            'label'   => 'День',
+            'options' => ['mon' => 'Пн', 'tue' => 'Вт'],
+        ],
+        [
+            'id'    => 'from',
+            'type'  => 'time',
+            'label' => 'С',
+        ],
+        [
+            'id'    => 'to',
+            'type'  => 'time',
+            'label' => 'По',
+        ],
+    ],
+]);
+```
+
+### Group
+
+```php
+WP_Field::make([
+    'id'    => 'address',
+    'type'  => 'group',
+    'label' => 'Адрес',
+    'fields' => [
+        ['id' => 'city', 'type' => 'text', 'label' => 'Город'],
+        ['id' => 'street', 'type' => 'text', 'label' => 'Улица'],
+        ['id' => 'number', 'type' => 'text', 'label' => 'Номер'],
+    ],
+]);
+```
+
+### Code Editor (v2.3)
+
+```php
+WP_Field::make([
+    'id'     => 'custom_css',
+    'type'   => 'code_editor',
+    'label'  => 'Custom CSS',
+    'mode'   => 'css', // css, javascript, php, html
+    'height' => '400px',
+]);
+```
+
+### Icon Picker (v2.3)
+
+```php
+WP_Field::make([
+    'id'      => 'menu_icon',
+    'type'    => 'icon',
+    'label'   => 'Иконка меню',
+    'library' => 'dashicons',
+]);
+```
+
+### Map (v2.3)
+
+```php
+WP_Field::make([
+    'id'      => 'location',
+    'type'    => 'map',
+    'label'   => 'Местоположение',
+    'api_key' => 'YOUR_GOOGLE_MAPS_API_KEY',
+    'zoom'    => 12,
+    'center'  => ['lat' => 55.7558, 'lng' => 37.6173],
+]);
+```
+
+### Sortable (v2.3)
+
+```php
+WP_Field::make([
+    'id'      => 'menu_order',
+    'type'    => 'sortable',
+    'label'   => 'Порядок меню',
+    'options' => [
+        'home'     => 'Главная',
+        'about'    => 'О нас',
+        'services' => 'Услуги',
+        'contact'  => 'Контакты',
+    ],
+]);
+```
+
+### Palette (v2.3)
+
+```php
+WP_Field::make([
+    'id'       => 'color_scheme',
+    'type'     => 'palette',
+    'label'    => 'Цветовая схема',
+    'palettes' => [
+        'blue'   => ['#0073aa', '#005a87', '#003d82'],
+        'green'  => ['#28a745', '#218838', '#1e7e34'],
+        'red'    => ['#dc3545', '#c82333', '#bd2130'],
+    ],
+]);
+```
+
+### Link (v2.3)
+
+```php
+WP_Field::make([
+    'id'    => 'cta_button',
+    'type'  => 'link',
+    'label' => 'CTA кнопка',
+]);
+
+// Получение значения:
+$link = get_post_meta($post_id, 'cta_button', true);
+// ['url' => '...', 'text' => '...', 'target' => '_blank']
+```
+
+### Accordion (v2.2)
+
+```php
+WP_Field::make([
+    'id'       => 'settings_accordion',
+    'type'     => 'accordion',
+    'label'    => 'Настройки',
+    'sections' => [
+        [
+            'title'  => 'Основные',
+            'open'   => true,
+            'fields' => [
+                ['id' => 'title', 'type' => 'text', 'label' => 'Заголовок'],
+            ],
+        ],
+        [
+            'title'  => 'Дополнительные',
+            'fields' => [
+                ['id' => 'desc', 'type' => 'textarea', 'label' => 'Описание'],
+            ],
+        ],
+    ],
+]);
+```
+
+### Typography (v2.2)
+
+```php
+WP_Field::make([
+    'id'    => 'heading_typography',
+    'type'  => 'typography',
+    'label' => 'Типография заголовков',
+]);
+
+// Сохраняется как:
+// [
+//     'font_family' => 'Arial',
+//     'font_size' => '24',
+//     'font_weight' => '700',
+//     'line_height' => '1.5',
+//     'text_align' => 'center',
+//     'color' => '#333333'
+// ]
+```
+
+## Операторы зависимостей
+
+- `==` — равно
+- `!=` — не равно
+- `>`, `>=`, `<`, `<=` — сравнение
+- `in` — в массиве
+- `not_in` — не в массиве
+- `contains` — содержит
+- `not_contains` — не содержит
+- `empty` — пусто
+- `not_empty` — не пусто
+
+## Документация
+
+- **example.php** — 🎯 Интерактивная страница с демонстрацией всех 52 типов полей (Инструменты → WP_Field Examples)
+- **README.md** — основная документация и примеры использования
+- **CHANGELOG.md** — история изменений и версий
+
+## Возможности
+
+### Система зависимостей
+- 12 операторов сравнения
+- AND/OR логика
+- Вложенные условия
+- Работает на PHP и JS
+
+### Типы хранилищ
+- Post meta
+- Options
+- Term meta
+- User meta
+- Comment meta
+- Custom tables (через фильтр)
+
+### Встроенные компоненты
+- WordPress Editor (TinyMCE)
+- WordPress Media Library
+- WordPress Color Picker
+- WordPress CodeMirror
+- jQuery UI Sortable
+- Dashicons
+
+## Расширяемость
+
+### Добавление своих типов полей
+
+```php
+add_filter('wp_field_types', function($types) {
+    $types['custom_type'] = ['render_custom', ['default' => 'value']];
+    return $types;
+});
+```
+
+### Добавление библиотеки иконок
+
+```php
+add_filter('wp_field_icon_library', function($icons, $library) {
+    if ($library === 'fontawesome') {
+        return ['fa-home', 'fa-user', 'fa-cog', ...];
+    }
+    return $icons;
+}, 10, 2);
+```
+
+### Кастомное получение значений
+
+```php
+add_filter('wp_field_get_value', function($value, $storage_type, $key, $id, $field) {
+    if ($storage_type === 'custom') {
+        return get_custom_value($key, $id);
+    }
+    return $value;
+}, 10, 5);
+```
+
+## История версий
+
+### v2.5.0 (2025-11-23)
+✅ Полная реализация 52 типов полей
+- Базовые: 9 типов
+- Выборные: 5 типов  
+- Продвинутые: 9 типов
+- Композитные: 2 типа
+- Простые v2.1: 9 типов
+- Средней сложности v2.2: 10 типов
+- Высокой сложности v2.3: 8 типов
+
+### v2.4.11 (2024-11-22)
+✅ Добавлено 8 типов высокой сложности:
+- `code_editor`, `icon`, `map`, `sortable`, `sorter`, `palette`, `link`, `backup`
+
+### v2.2.0 (2024-11-22)
+✅ Добавлено 10 типов средней сложности:
+- `accordion`, `tabbed`, `typography`, `spacing`, `dimensions`, `border`, `background`, `link_color`, `color_group`, `image_select`
+
+### v2.1.0 (2024-11-22)
+✅ Добавлено 9 простых типов:
+- `switcher`, `spinner`, `button_set`, `slider`, `heading`, `subheading`, `notice`, `content`, `fieldset`
+
+### v2.0.0 (2024)
+✅ Базовая реализация 25 типов полей
+
+## Статистика проекта
+
+- **Строк PHP:** 2705 (WP_Field.php)
+- **Строк JS:** 1222 (wp-field.js)
+- **Строк CSS:** 1839 (wp-field.css)
+- **Типов полей:** 52+
+- **Операторов зависимостей:** 12
+- **Типов хранилищ:** 5
+- **Внешних зависимостей:** 0
+
+## Совместимость
+
+- **WordPress:** 4.6+
+- **PHP:** 7.4+
+- **Зависимости:** jQuery, jQuery UI Sortable, WordPress встроенные компоненты
+- **Браузеры:** Chrome, Firefox, Safari, Edge (последние 2 версии)
+
+## Производительность
+
+- Минимальный размер CSS: ~20KB
+- Минимальный размер JS: ~15KB
+- Lazy loading для тяжелых компонентов (CodeMirror, Google Maps)
+- Оптимизированные селекторы и события
+
+## Лицензия
+
+GPL v2 или выше
+
+## Автор
+
+Aleksei Tikhomirov (https://rwsite.ru)
+

@@ -1,0 +1,1 @@
+{"version":2,"defects":{"MenuCartFragmentsTest::test_fragments_include_cart_count_and_mini_cart_wrapper":7,"MenuCartFragmentsTest::test_fragments_work_with_empty_cart":7},"times":{"MenuCartFragmentsTest::test_fragments_include_cart_count_and_mini_cart_wrapper":0,"MenuCartFragmentsTest::test_fragments_work_with_empty_cart":0}}
