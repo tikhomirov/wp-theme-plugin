@@ -1,43 +1,49 @@
-# WordPress Bootstrap 5 Theme Features (`wp-theme-plugin`)
+# WordPress Bootstrap 5 Theme Features
 
-![WordPress Plugin](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)
-![PHP Support](https://img.shields.io/badge/PHP-7.4%20%7C%208.0%20%7C%208.1%20%7C%208.2%20%7C%208.3-777BB4.svg)
-![License](https://img.shields.io/badge/License-GPLv2-green.svg)
+[![WordPress Plugin](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
+[![PHP Support](https://img.shields.io/badge/PHP-7.4%20%7C%208.0%20%7C%208.1%20%7C%208.2%20%7C%208.3-777BB4.svg)](https://php.net/)
+[![License](https://img.shields.io/badge/License-GPLv3-green.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 
-Набор вспомогательных компонентов, хелперов меню и стилей для ускоренной разработки тем WordPress на базе Bootstrap 5.
+Enhances Bootstrap 5 WordPress themes with built-in navigation cart, modal windows, and reading progress bars.
 
----
+## Requirements
 
-## 🚀 Возможности
+| Component | Minimum | Tested |
+|-----------|---------|--------|
+| **WordPress** | 5.0 | 5.0 – 6.7 |
+| **PHP** | 7.4 | 7.4, 8.0, 8.1, 8.2, 8.3 |
 
-- 🛒 **WooCommerce Navbar Cart:** Виджет корзины для навигационной панели Bootstrap.
-- 🪟 **Модальные окна:** Готовая интеграция Bootstrap 5 Modals для контента.
-- 🚀 **Прогресс-бар чтения:** Индикатор прокрутки статьи и кнопка «Наверх».
-- 🎨 **Шрифты:** Встроенная поддержка Open Sans и Line Awesome icons.
+## Features
 
----
+- **Bootstrap 5 Integration:** Navbar WooCommerce cart, modal windows, and UI utilities.
+- **Performance UI:** Reading progress bar and 'To Top' button.
 
-## 📥 Установка
+## Installation
 
-### Через Composer (рекомендуется)
+### Via Composer (VCS Repository)
+Add the repository to your `composer.json` and require the package:
+
 ```bash
+composer config repositories.tikhomirov-wp-theme-plugin git https://github.com/tikhomirov/wp-theme-plugin.git
 composer require tikhomirov/wp-theme-plugin
 ```
 
-### Вручную
-1. Скачайте ZIP-архив репозитория.
-2. Распакуйте в директорию `/wp-content/plugins/wp-theme-plugin/`.
-3. Активируйте плагин в админ-панели **Плагины → Установленные**.
+### Manual Installation
+1. Download the latest ZIP release.
+2. Upload the plugin folder to the `/wp-content/plugins/` directory.
+3. Activate the plugin through the 'Plugins' menu in WordPress.
 
 ---
 
-## 💻 Использование
+## Русский
 
-Активируйте плагин совместно с вашей Bootstrap 5 темой для автоматического подключения компонентов к меню и шаблонам.
+Дополняет темы WordPress на базе Bootstrap 5 встроенной корзиной WooCommerce в навбаре, модальными окнами и прогресс-баром чтения.
 
----
+### Совместимость
+- **WordPress:** от 5.0 и выше
+- **PHP:** от 7.4 до 8.3
 
-## 🛠️ Требования
+### Возможности
+- Интеграция компонентов Bootstrap 5 для тем WordPress.
 
-- **WordPress:** 5.0 или выше
-- **PHP:** 7.4, 8.0, 8.1, 8.2, 8.3
+**Установка:** подключите через Composer (VCS) или скачайте архив и активируйте в панели управления WordPress.
