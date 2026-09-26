@@ -1,15 +1,16 @@
 {
-  "name": "rwsite/wp-theme-plugin",
-  "description": "WP BS5 theme extensions",
-  "minimum-stability": "stable",
-  "license": "proprietary",
+  "name": "tikhomirov/wp-theme-plugin",
+  "description": "Набор вспомогательных компонентов, хелперов меню и стилей для ускоренной разработки тем WordPress на базе Bootstrap 5.",
   "type": "wordpress-plugin",
+  "license": "GPL-3.0-or-later",
   "authors": [
     {
       "name": "Aleksei Tikhomirov",
-      "email": "alex@rwsite.ru"
+      "email": "alex@rwsite.ru",
+      "homepage": "https://rwsite.ru"
     }
   ],
   "require": {
+    "php": ">=7.4"
   }
 }
