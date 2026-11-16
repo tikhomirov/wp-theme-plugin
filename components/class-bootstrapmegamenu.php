@@ -13,49 +13,59 @@ use theme_plugin\classes\Navi;
 class BootstrapMegaMenu extends Plugin
 {
     public string $file;
+
     public string $url;
+
     public string $assets;
+
     public string $ver;
+
     public ?Navi $navigation = null;
+
     public ?array $icons = null;
+
     public string $menu;
+
     public array $settings;
+
     public string $key;
 
     public function __construct($menu = 'primary')
     {
         $this->file = WP_THEME_PLUGIN;
         $this->url = plugin_dir_url($this->file);
-        $this->assets = $this->url.'assets/';
+        $this->assets = $this->url . 'assets/';
         $this->ver = defined('WP_DEBUG') && WP_DEBUG ? time() : '1.0';
         $this->menu = $menu;
         $this->settings = [ // for simple line icons
-                            'use_cdn' => 'local', // yes, no, local
+            'use_cdn' => 'local', // yes, no, local
         ];
     }
 
     public function add_actions(): void
     {
         $this->navigation = Navi::make()->withDefaultClasses()->build($this->menu);
-        $this->icons = require_once dirname(__DIR__).'/data/icons.php';
+        $this->icons = require_once dirname(__DIR__) . '/data/icons.php';
         $this->key = md5(json_encode($this->navigation->all()));
 
         add_action('wp_footer', [$this, 'js'], 99);
         add_action('wp_enqueue_scripts', [$this, 'css'], 9);
-        add_action('print_menu', fn() => print($this->wp_nav_menu()));
+        add_action('print_menu', fn () => print ($this->wp_nav_menu()));
 
         add_action('admin_enqueue_scripts', function () {
-            if ('yes' === $this->settings['use_cdn']) {
-                wp_enqueue_style('simple-line-icons',
-                    'https://cdn.jsdelivr.net/npm/simple-line-icons@2.5.5/css/simple-line-icons.css');
+            if ($this->settings['use_cdn'] === 'yes') {
+                wp_enqueue_style(
+                    'simple-line-icons',
+                    'https://cdn.jsdelivr.net/npm/simple-line-icons@2.5.5/css/simple-line-icons.css',
+                );
             } else {
-                if ('local' === $this->settings['use_cdn']) {
-                    wp_enqueue_style('simple-line-icons', $this->assets.'css/simple-line-icons.css', false, $this->ver);
+                if ($this->settings['use_cdn'] === 'local') {
+                    wp_enqueue_style('simple-line-icons', $this->assets . 'css/simple-line-icons.css', false, $this->ver);
                 }
             }
         });
 
-        if (!is_admin()) {
+        if (! is_admin()) {
             return;
         }
 
@@ -70,46 +80,47 @@ class BootstrapMegaMenu extends Plugin
     public function wp_nav_menu(): string
     {
         $menu = wp_cache_get($this->key);
-        if (!empty($menu)) {
-            return $menu.'<!-- #cached menu -->';
+        if (! empty($menu)) {
+            return $menu . '<!-- #cached menu -->';
         }
         ob_start();
         ?>
         <ul class="nav nav-pills me-lg-auto mb-2 justify-content-center align-items-center mb-md-0">
-            <?php foreach ($this->navigation->all() as $item) : ?>
+            <?php foreach ($this->navigation->all() as $item) { ?>
                 <?php
                 $icon = get_post_meta($item->id, '_menu_item_icon', true);
                 $sidebar = get_post_meta($item->id, '_menu_item_sidebar', true);
-                $icon_html = $icon ? '<i class="'.esc_attr($icon).'"></i> ' : '';
+                $icon_html = $icon ? '<i class="' . esc_attr($icon) . '"></i> ' : '';
                 ?>
 
                 <li class="<?php echo $item->classes; ?> nav-item
-                    <?php if ($item->children || $sidebar) : ?>dropdown<?php endif; ?>
-                    <?php if ($sidebar) : ?> position-static<?php endif; ?>
+                    <?php if ($item->children || $sidebar) { ?>dropdown<?php } ?>
+                    <?php if ($sidebar) { ?> position-static<?php } ?>
                 ">
 
                     <a
                             id="<?= $item->id ?>"
                             href="<?php echo $item->url; ?>"
                             class="nav-link <?php echo $item->active || $item->activeParent ? 'active' : ''; ?>
-                       <?php if ($item->children || $sidebar) : ?>dropdown-item dropdown-toggle<?php endif; ?>
+                       <?php if ($item->children || $sidebar) { ?>dropdown-item dropdown-toggle<?php } ?>
                        "
                     >
-                        <?php echo $icon_html.$item->label; ?>
+                        <?php echo $icon_html . $item->label; ?>
                     </a>
 
                     <?php
-                    if ($item->children) :
+                    if ($item->children) {
                         $this->dropdown_menu($item, $sidebar);
-                    elseif ($sidebar):
+                    } elseif ($sidebar) {
                         $this->mega_menu($item, $sidebar);
-                    endif; ?>
+                    } ?>
                 </li>
-            <?php endforeach; ?>
+            <?php } ?>
         </ul>
         <?php
         $menu = ob_get_clean();
         wp_cache_set($this->key, $menu);
+
         return $menu;
     }
 
@@ -118,36 +129,36 @@ class BootstrapMegaMenu extends Plugin
         // navmenu
         ?>
         <ul class="dropdown-menu">
-            <?php foreach ($item->children ?? [] as $child) : ?>
+            <?php foreach ($item->children ?? [] as $child) { ?>
                 <li class="<?= $child->classes; ?> <?= $child->children ? 'dropdown' : '' ?> <?= $child->active ? 'current-item' : ''; ?>">
 
                     <a href="<?= $child->url; ?>"
                        class="dropdown-item <?= $child->children ? 'dropdown-toggle' : '' ?>">
                         <?php
                         $icon = get_post_meta($child->id, '_menu_item_icon', true);
-                        $icon_html = $icon ? '<i class="'.esc_attr($icon).'"></i> ' : '';
-                        ?>
-                        <?php echo $icon_html.$child->label; ?>
+                $icon_html = $icon ? '<i class="' . esc_attr($icon) . '"></i> ' : '';
+                ?>
+                        <?php echo $icon_html . $child->label; ?>
                     </a>
 
                     <?php
-                    if ($child->children) :
+                    if ($child->children) {
                         $this->dropdown_menu($child);
-                    endif; ?>
+                    } ?>
                 </li>
-            <?php endforeach; ?>
+            <?php } ?>
 
             <?php
-            if (!empty($sidebar)) {
+            if (! empty($sidebar)) {
                 ob_start();
                 dynamic_sidebar($sidebar);
                 $sidebar_output = ob_get_clean();
                 $output = '</li>';
-                $output .= '<div class="sidebar">'.$sidebar_output.'</div>';
+                $output .= '<div class="sidebar">' . $sidebar_output . '</div>';
                 $output .= '</li>';
                 echo $output;
             }
-            ?>
+        ?>
 
         </ul>
         <?php
@@ -168,8 +179,8 @@ class BootstrapMegaMenu extends Plugin
 
     public function css()
     {
-        wp_enqueue_style('megamenu', $this->assets.'css/megamenu.css', false, $this->ver);
-        wp_enqueue_style('animate', $this->assets.'css/animate.css', false, $this->ver);
+        wp_enqueue_style('megamenu', $this->assets . 'css/megamenu.css', false, $this->ver);
+        wp_enqueue_style('animate', $this->assets . 'css/animate.css', false, $this->ver);
     }
 
     public function js()
@@ -245,11 +256,11 @@ class BootstrapMegaMenu extends Plugin
                     <?php
                     // Здесь мы выводим все иконки
                     foreach ($this->icons as $icon) {
-                        echo '<div class="icon-item" data-icon="'.esc_attr($icon).'">';
-                        echo '<i class="'.esc_attr($icon).'"></i>';
+                        echo '<div class="icon-item" data-icon="' . esc_attr($icon) . '">';
+                        echo '<i class="' . esc_attr($icon) . '"></i>';
                         echo '</div>';
                     }
-                    ?>
+        ?>
                 </div>
             </div>
         </div>
@@ -351,11 +362,14 @@ class BootstrapMegaMenu extends Plugin
     {
 
         if (isset($_REQUEST['menu-item-icon'][$menu_item_db_id])) {
-            update_post_meta($menu_item_db_id, '_menu_item_icon',
-                sanitize_text_field($_REQUEST['menu-item-icon'][$menu_item_db_id]));
+            update_post_meta(
+                $menu_item_db_id,
+                '_menu_item_icon',
+                sanitize_text_field($_REQUEST['menu-item-icon'][$menu_item_db_id]),
+            );
         }
 
-        if (!empty($_POST['menu-item-sidebar'][$menu_item_db_id])) {
+        if (! empty($_POST['menu-item-sidebar'][$menu_item_db_id])) {
             $sidebar = sanitize_text_field($_POST['menu-item-sidebar'][$menu_item_db_id]);
             update_post_meta($menu_item_db_id, '_menu_item_sidebar', $sidebar);
         } else {
@@ -368,10 +382,11 @@ class BootstrapMegaMenu extends Plugin
     public function my_wp_nav_menu_link_attributes($atts, $item, $args)
     {
         $icon = get_post_meta($item->ID, '_menu_item_icon', true);
-        if (!empty($icon)) {
+        if (! empty($icon)) {
             $atts['class'] .= ' menu-item-has-icon';
             $atts['data-icon'] = $icon;
         }
+
         return $atts;
     }
 
@@ -383,13 +398,13 @@ class BootstrapMegaMenu extends Plugin
         // Получаем текущее значение сайдбара из метаданных
         $sidebar = get_post_meta($item_id, '_menu_item_sidebar', true);
         echo '<div class="field-sidebar">';
-        echo '<label for="edit-menu-item-sidebar-'.$item_id.'">Выберите сайдбар:</label>';
-        echo '<select id="edit-menu-item-sidebar-'.$item_id.'" name="menu-item-sidebar['.$item_id.']">';
+        echo '<label for="edit-menu-item-sidebar-' . $item_id . '">Выберите сайдбар:</label>';
+        echo '<select id="edit-menu-item-sidebar-' . $item_id . '" name="menu-item-sidebar[' . $item_id . ']">';
         echo '<option value=""> - </option>';
         // Выводим список сайдбаров
         foreach ($wp_registered_sidebars as $sidebar_id => $sidebar_data) {
             $selected = ($sidebar === $sidebar_id) ? 'selected="selected"' : '';
-            echo '<option value="'.esc_attr($sidebar_id).'" '.$selected.'>'.esc_html($sidebar_data['name']).'</option>';
+            echo '<option value="' . esc_attr($sidebar_id) . '" ' . $selected . '>' . esc_html($sidebar_data['name']) . '</option>';
         }
         echo '</select>';
         echo '</div>';

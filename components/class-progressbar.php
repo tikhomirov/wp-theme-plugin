@@ -2,28 +2,33 @@
 
 namespace theme_plugin\components;
 
-class Progressbar {
-	public function add_actions() {
-		add_action('wp_enqueue_scripts', [$this, 'scripts'], 9);
-		add_action('wp_body_open', [$this, 'render_html']);
-	}
+class Progressbar
+{
+    public function add_actions()
+    {
+        add_action('wp_enqueue_scripts', [$this, 'scripts'], 9);
+        add_action('wp_body_open', [$this, 'render_html']);
+    }
 
-	public function scripts() {
-		wp_add_inline_style('wp-theme', $this->css());
-		wp_add_inline_script('jquery', $this->js());
-	}
+    public function scripts()
+    {
+        wp_add_inline_style('wp-theme', $this->css());
+        wp_add_inline_script('jquery', $this->js());
+    }
 
-	public function render_html() {
-		if(is_singular('post')){
-		?>
+    public function render_html()
+    {
+        if (is_singular('post')) {
+            ?>
 		<div class="public-progress-bar" id="progressBar"></div>
 		<?php
-		}
-	}
+        }
+    }
 
-	public function css() {
-		ob_start()
-		?>
+    public function css()
+    {
+        ob_start()
+        ?>
 		<style>
             .public-progress-bar {
                 position: fixed;
@@ -37,12 +42,13 @@ class Progressbar {
             }
 		</style>
 		<?php
-		return str_replace(['<style>','</style>'], [''], ob_get_clean());
-	}
+        return str_replace(['<style>', '</style>'], [''], ob_get_clean());
+    }
 
-	public function js() {
-		ob_start();
-		?>
+    public function js()
+    {
+        ob_start();
+        ?>
 		<script>
             function progressBar() {
                 let scroll = document.body.scrollTop || document.documentElement.scrollTop;
@@ -56,6 +62,6 @@ class Progressbar {
             window.addEventListener('scroll', progressBar);
 		</script>
 		<?php
-		return str_replace(['<script>','</script>'], [''], ob_get_clean());
-	}
+        return str_replace(['<script>', '</script>'], [''], ob_get_clean());
+    }
 }

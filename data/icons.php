@@ -189,5 +189,5 @@ return [
     'icon-social-youtube',
     'icon-social-dropbox',
     'icon-social-vkontakte',
-    'icon-social-steam'
+    'icon-social-steam',
 ];

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugin Name:     WP Theme components plugin
  * Plugin URL:      https://rwsite.ru
@@ -27,7 +28,7 @@ use theme_plugin\components\MenuCart;
 use theme_plugin\components\Progressbar;
 use theme_plugin\components\ToTop;
 
-defined('ABSPATH') || die();
+defined('ABSPATH') || exit();
 
 define('WP_THEME_PLUGIN', __FILE__);
 
@@ -35,32 +36,31 @@ define('WP_THEME_PLUGIN', __FILE__);
  * WordPress Autoload classes.
  */
 spl_autoload_register(function ($full_class_name) {
-    if (strpos($full_class_name, __NAMESPACE__) !== 0) {
+    if (mb_strpos($full_class_name, __NAMESPACE__) !== 0) {
         return;
     }
-    $full_class_name = strtolower(str_replace('_', '-', $full_class_name));
+    $full_class_name = mb_strtolower(str_replace('_', '-', $full_class_name));
     $class_parts = explode('\\', $full_class_name);
     unset($class_parts[0]); // Unset the __NAMESPACE__.
 
-    $class_file = 'class-'.array_pop($class_parts).'.php';
+    $class_file = 'class-' . array_pop($class_parts) . '.php';
     $class_parts[] = $class_file;
 
-    if (file_exists(plugin_dir_path(__FILE__).implode(DIRECTORY_SEPARATOR, $class_parts))) {
-        require_once plugin_dir_path(__FILE__).implode(DIRECTORY_SEPARATOR, $class_parts);
+    if (file_exists(plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, $class_parts))) {
+        require_once plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, $class_parts);
     } else {
         echo 'FATAL ERROR: File not found by path: ';
         echo '<pre>';
-        var_dump(plugin_dir_path(__FILE__).implode(DIRECTORY_SEPARATOR, $class_parts));
+        var_dump(plugin_dir_path(__FILE__) . implode(DIRECTORY_SEPARATOR, $class_parts));
         echo '</pre>';
-        die();
+        exit();
     }
 });
 
 require_once 'functions.php';
 
-Logger::$logPath = plugin_dir_path(__FILE__).'log.log';
+Logger::$logPath = plugin_dir_path(__FILE__) . 'log.log';
 MenuCart::$template = 'bs-5';
-
 
 /**
  * Run list of features
@@ -69,7 +69,7 @@ add_action('init', function () {
 
     // К этому скрипту подключаются все остальные inline css компоненты
     add_action('wp_enqueue_scripts', function () {
-        wp_enqueue_style('wp-theme', plugin_dir_url(__FILE__).'assets/css/style.css', [], '1.0.0');
+        wp_enqueue_style('wp-theme', plugin_dir_url(__FILE__) . 'assets/css/style.css', [], '1.0.0');
     }, 1);
 
     // Modal windows example

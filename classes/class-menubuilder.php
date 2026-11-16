@@ -53,17 +53,17 @@ class MenuBuilder
     {
         $this->menu = $this->filter($menu);
 
-        if (!$this->menu) {
+        if (! $this->menu) {
             return [];
         }
 
         $this->menu = array_combine(
             array_column($this->menu, 'ID'),
-            $this->menu
+            $this->menu,
         );
 
         return $this->handle(
-            $this->map($this->menu)
+            $this->map($this->menu),
         );
     }
 
@@ -72,9 +72,9 @@ class MenuBuilder
      */
     protected function filter(array $menu = []): array
     {
-        $menu = array_filter($menu, fn($item) => is_a($item, 'WP_Post') || is_a($item, 'WPML_LS_Menu_Item'));
+        $menu = array_filter($menu, fn ($item) => is_a($item, 'WP_Post') || is_a($item, 'WPML_LS_Menu_Item'));
 
-        if (!$menu) {
+        if (! $menu) {
             return [];
         }
 
@@ -94,7 +94,7 @@ class MenuBuilder
             $item->classes = is_array($classes) ? implode(' ', $classes) : $classes;
 
             foreach ($item as $key => $value) {
-                if (!$value) {
+                if (! $value) {
                     $item->{$key} = false;
                 }
             }
@@ -115,7 +115,7 @@ class MenuBuilder
                 $result[$key] = $item->{$value};
             }
 
-            $result['parentObjectId'] = !empty($result['parent']) && !empty($this->menu[$result['parent']])
+            $result['parentObjectId'] = ! empty($result['parent']) && ! empty($this->menu[$result['parent']])
                 ? $this->menu[$result['parent']]->object_id
                 : false;
 

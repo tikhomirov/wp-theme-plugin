@@ -1,11 +1,8 @@
 <?php
-/**
- *
- */
 ?>
 <div class="navbar-nav mini-cart dropdown">
     <?php
-    if (WC()->cart->get_cart_contents_count() > 0): ?>
+    if (WC()->cart->get_cart_contents_count() > 0) { ?>
         <a id="dropdown-cart" class="cart-contents cart-link nav-link dropdown-toggle" href="<?php echo esc_url(wc_get_cart_url()); ?>"
            title="<?php esc_attr_e('View your shopping cart', 'understrap'); ?>" role="button"
            data-bs-toggle="dropdown" >
@@ -20,5 +17,5 @@
         </div>
 
     <?php
-    endif; ?>
+    } ?>
 </div>

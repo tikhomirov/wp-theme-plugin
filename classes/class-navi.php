@@ -2,8 +2,6 @@
 
 namespace theme_plugin\classes;
 
-use Exception;
-
 class Navi
 {
     /**
@@ -85,11 +83,11 @@ class Navi
      */
     public function get(?string $key = null, mixed $default = null): mixed
     {
-        if (!$this->menu) {
+        if (! $this->menu) {
             return $default;
         }
 
-        if (!empty($key)) {
+        if (! empty($key)) {
             return $this->menu->{$key} ?? $default;
         }
 
@@ -109,7 +107,7 @@ class Navi
      */
     public function isNotEmpty(): bool
     {
-        return !$this->isEmpty();
+        return ! $this->isEmpty();
     }
 
     /**
@@ -142,7 +140,7 @@ class Navi
     public function withClasses(string|array $classes): self
     {
         if ($this->menu) {
-            throw new Exception('Classes must be set before building the menu.');
+            throw new \Exception('Classes must be set before building the menu.');
         }
 
         $classes = is_string($classes)
@@ -160,7 +158,7 @@ class Navi
     public function withoutClasses(string|array $classes): self
     {
         if ($this->menu) {
-            throw new Exception('Classes must be set before building the menu.');
+            throw new \Exception('Classes must be set before building the menu.');
         }
 
         $classes = is_string($classes)
@@ -190,7 +188,7 @@ class Navi
      */
     protected function disallowedClasses(): array
     {
-        return array_merge(...array_map(fn($class) => [
+        return array_merge(...array_map(fn ($class) => [
             $class,
             str_replace('-', '_', $class),
         ], $this->disallowedClasses));

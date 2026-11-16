@@ -1,11 +1,8 @@
 <?php
-/**
- *
- */
 ?>
 <div class="nav-item dropdown mini-cart">
     <?php
-    if (WC()->cart->get_cart_contents_count() > 0): ?>
+    if (WC()->cart->get_cart_contents_count() > 0) { ?>
         <a class="cart-contents cart-link nav-link dropdown-toggle" href="<?php echo esc_url(wc_get_cart_url()); ?>"
            title="<?php esc_attr_e('View your shopping cart', 'understrap'); ?>" role="button" data-toggle="dropdown"
            aria-haspopup="true" aria-expanded="true">
@@ -18,5 +15,5 @@
             </div>
         </div>
     <?php
-    endif; ?>
+    } ?>
 </div>
