@@ -57,7 +57,7 @@ class Logger
             $record = ob_get_clean();
         }
 
-        return mb_rtrim($record);
+        return rtrim($record);
     }
 
     /**
