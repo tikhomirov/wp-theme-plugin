@@ -12,18 +12,20 @@ class MenuField
             'title' => 'Use Mega Menu. With 1/2 columns',
             'type'  => 'checkbox',
         ],
-        'icon'          => [
+        'icon' => [
             'title' => 'SVG Icon',
             'desc'  => 'Set svg icon class. Empty for not use it.',
         ],
-        'content'       => [
+        'content' => [
             'title'   => 'Mega menu content',
             'desc'    => 'Mega menu content.',
             'type'    => 'select',
-            'options' => []
+            'options' => [],
         ],
     ];
+
     public array $fields;
+
     /** @var ContentBlock|null */
     public $plugin;
 
@@ -47,7 +49,7 @@ class MenuField
     private static function save_field($menu_id, $item_id, $meta_key)
     {
 
-        if (!isset($_POST[$meta_key][$item_id])) {
+        if (! isset($_POST[$meta_key][$item_id])) {
             return;
         }
 
@@ -66,7 +68,7 @@ class MenuField
 
         $svg = $post->_menu_item_svg_icon ?: '';
         if ($svg) {
-            //$svg = get_svg( $svg );
+            // $svg = get_svg( $svg );
         }
 
         return str_replace('{SVG}', $svg, $item_output);
@@ -115,12 +117,13 @@ class MenuField
                         'options' => $data['options'] ?? [],
                     ],
                     'post',
-                    $item_id
+                    $item_id,
                 ]);
+
                 return;
             }
 
-            $desc = empty($data['desc']) ? '' : '<span class="description">'.$data['desc'].'</span>';
+            $desc = empty($data['desc']) ? '' : '<span class="description">' . $data['desc'] . '</span>';
             ?>
             <p class="field-<?= $meta_key ?> description description-<?= $size ?>">
                 <?= $title ?>

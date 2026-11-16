@@ -2,29 +2,33 @@
 
 namespace theme_plugin\components;
 
-class ToTop {
+class ToTop
+{
+    public function add_actions()
+    {
+        add_action('wp_enqueue_scripts', [$this, 'scripts'], 9);
+        add_action('wp_footer', [$this, 'render_html']);
+    }
 
-	public function add_actions() {
-		add_action('wp_enqueue_scripts', [$this, 'scripts'], 9);
-		add_action('wp_footer', [$this, 'render_html']);
-	}
+    public function scripts()
+    {
+        wp_add_inline_style('wp-theme', $this->css());
+        wp_add_inline_script('jquery', $this->js());
+    }
 
-	public function scripts() {
-		wp_add_inline_style('wp-theme', $this->css());
-		wp_add_inline_script('jquery', $this->js());
-	}
-
-	public function render_html() {
-		?>
+    public function render_html()
+    {
+        ?>
 		<div class="back-to-top">
 			<i class="icon-arrow-up"></i>
 		</div>
 		<?php
-	}
+    }
 
-	public function css() {
-			ob_start()
-			?>
+    public function css()
+    {
+        ob_start()
+        ?>
 			<style>
                 .back-to-top {
                     position: fixed;
@@ -62,12 +66,13 @@ class ToTop {
                 }
 			</style>
 			<?php
-			return str_replace(['<style>','</style>'], [''], ob_get_clean());
-	}
+        return str_replace(['<style>', '</style>'], [''], ob_get_clean());
+    }
 
-	public function js() {
-		ob_start();
-		?>
+    public function js()
+    {
+        ob_start();
+        ?>
 		<script>
             jQuery(function ($) {
                 $('.back-to-top').click(function () {
@@ -86,6 +91,6 @@ class ToTop {
             });
 		</script>
 		<?php
-		return str_replace(['<script>','</script>'], [''], ob_get_clean());
-	}
+        return str_replace(['<script>', '</script>'], [''], ob_get_clean());
+    }
 }

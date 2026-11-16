@@ -11,11 +11,7 @@ use WC_Order_Refund;
 
 class Modal
 {
-
-    public function __construct()
-    {
-
-    }
+    public function __construct() {}
 
     public function add_actions()
     {
@@ -35,6 +31,7 @@ class Modal
 
     /**
      * Render modal thx
+     *
      * @return void
      */
     public function wp_modal_thx()
@@ -63,7 +60,7 @@ class Modal
                         <?php do_action('woocommerce_before_thankyou', $order->get_id()); ?>
 
                         <?php
-                        if ($order->has_status('failed')) : ?>
+                        if ($order->has_status('failed')) { ?>
 
                             <p class="woocommerce-notice woocommerce-notice--error woocommerce-thankyou-order-failed"><?php
                                 esc_html_e('Unfortunately your order cannot be processed as the originating bank/merchant has declined your transaction. Please attempt your purchase again.',
@@ -73,56 +70,56 @@ class Modal
                                 echo esc_url($order->get_checkout_payment_url()); ?>" class="button pay"><?php
                                     esc_html_e('Pay', 'woocommerce'); ?></a>
                                 <?php
-                                if (is_user_logged_in()) : ?>
+                                if (is_user_logged_in()) { ?>
                                     <a href="<?php
                                     echo esc_url(wc_get_page_permalink('myaccount')); ?>" class="button pay"><?php
                                         esc_html_e('My account', 'woocommerce'); ?></a>
                                 <?php
-                                endif; ?>
+                                } ?>
                             </p>
 
                         <?php
-                        else : ?>
+                        } else { ?>
 
                             <p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received"><?php
                                 echo apply_filters('woocommerce_thankyou_order_received_text',
                                     esc_html__('Thank you. Your order has been received.', 'woocommerce'),
-                                    $order); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+                                    $order); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></p>
                             <ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">
 
                                 <li class="woocommerce-order-overview__order order">
                                     <?php
                                     esc_html_e('Order number:', 'woocommerce'); ?>
                                     <strong><?php
-                                        echo $order->get_order_number(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></strong>
+                                        echo $order->get_order_number(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></strong>
                                 </li>
 
                                 <li class="woocommerce-order-overview__date date">
                                     <?php
                                     esc_html_e('Date:', 'woocommerce'); ?>
                                     <strong><?php
-                                        echo wc_format_datetime($order->get_date_created()); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></strong>
+                                        echo wc_format_datetime($order->get_date_created()); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></strong>
                                 </li>
 
                                 <?php
-                                if (is_user_logged_in() && $order->get_user_id() === get_current_user_id() && $order->get_billing_email()) : ?>
+                                if (is_user_logged_in() && $order->get_user_id() === get_current_user_id() && $order->get_billing_email()) { ?>
                                     <li class="woocommerce-order-overview__email email">
                                         <?php
                                         esc_html_e('Email:', 'woocommerce'); ?>
                                         <strong><?php
-                                            echo $order->get_billing_email(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></strong>
+                                            echo $order->get_billing_email(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></strong>
                                     </li>
                                 <?php
-                                endif; ?>
+                                } ?>
 
                                 <li class="woocommerce-order-overview__total total">
                                     <?php
                                     esc_html_e('Total:', 'woocommerce'); ?>
                                     <strong><?php
-                                        echo $order->get_formatted_order_total(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></strong>
+                                        echo $order->get_formatted_order_total(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped?></strong>
                                 </li>
                                 <?php
-                                if ($order->get_payment_method_title()) : ?>
+                                if ($order->get_payment_method_title()) { ?>
                                     <li class="woocommerce-order-overview__payment-method method">
                                         <?php
                                         esc_html_e('Payment method:', 'woocommerce'); ?>
@@ -130,12 +127,12 @@ class Modal
                                             echo wp_kses_post($order->get_payment_method_title()); ?></strong>
                                     </li>
                                 <?php
-                                endif; ?>
+                                } ?>
                             </ul>
                         <?php
-                        endif; ?>
+                        } ?>
 
-                        <?php do_action('woocommerce_thankyou_'.$order->get_payment_method(), $order->get_id()); ?>
+                        <?php do_action('woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id()); ?>
                         <?php // do_action( 'woocommerce_thankyou', $order->get_id() );
                         ?>
 
@@ -144,11 +141,11 @@ class Modal
                         if (in_array($order->get_status(), ['on-hold', 'processing'])) {
                             WC()->payment_gateways();
                             // The "Payment instructions" will be displayed with that:
-                            do_action('woocommerce_thankyou_'.$order->get_payment_method(), $order->get_id());
+                            do_action('woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id());
                         }
 
-                        do_action('woocommerce_order_details_before_order_table', $order, false);
-                        ?>
+        do_action('woocommerce_order_details_before_order_table', $order, false);
+        ?>
 
                     </div>
                 </div>
@@ -159,6 +156,7 @@ class Modal
 
     /**
      * Helper
+     *
      * @return bool|WC_Order|WC_Order_Refund|null
      */
     public function mb_get_order()
@@ -193,6 +191,7 @@ class Modal
 
     /**
      * Render modal checkout
+     *
      * @return void
      */
     public function wp_modal_checkout()
@@ -229,9 +228,9 @@ class Modal
 
                 let preloader = $('.page-loading');
 
-                <?php if(!empty($this->mb_get_order())): ?>
+                <?php if (! empty($this->mb_get_order())) { ?>
                 $('#modal_thx').modal('show');
-                <?php endif;?>
+                <?php }?>
 
                 if ($('[data-theme-data-product]').length) {
                     $('[data-theme-data-product]').each(function () {
@@ -322,6 +321,7 @@ class Modal
 
     /**
      * @return void
+     *
      * @throws Exception
      */
     public function ajax_wc_lessons()
@@ -330,7 +330,7 @@ class Modal
         $nonce = $_POST['_nonce'];
         $product_id = is_array($_POST['product_id']) ? $_POST['product_id'] : absint($_POST['product_id']);
 
-        if (!wp_verify_nonce($nonce, 'wc_lesson')) {
+        if (! wp_verify_nonce($nonce, 'wc_lesson')) {
             wp_send_json_error('error!');
         }
 
@@ -340,7 +340,7 @@ class Modal
             foreach ($product_id as $id) {
                 WC()->cart->add_to_cart($id);
             }
-            if (!empty($settings['cta']['2_coupon'])) {
+            if (! empty($settings['cta']['2_coupon'])) {
                 $coupon = wc_get_coupon_code_by_id((int) $settings['cta']['2_coupon']);
                 WC()->cart->apply_coupon($coupon);
             }
@@ -354,21 +354,22 @@ class Modal
 
     /**
      * wc_render_html
+     *
      * @return void
      */
     public function render_modal_content()
     {
         $nonce = $_POST['_nonce'];
         $shortcode = $_POST['shortcode'] ?? null;
-        if (!wp_verify_nonce($nonce, 'wc_lesson') || empty($shortcode)) {
+        if (! wp_verify_nonce($nonce, 'wc_lesson') || empty($shortcode)) {
             wp_send_json_error('error!');
         }
 
-        if ('wc_coupon' === $shortcode) {
-            //$this->coupon_form();
+        if ($shortcode === 'wc_coupon') {
+            // $this->coupon_form();
         }
 
-        if ('wp_modal_auth' === $shortcode) {
+        if ($shortcode === 'wp_modal_auth') {
             $this->wp_modal_auth();
         }
 
@@ -377,6 +378,7 @@ class Modal
 
     /**
      * Render modal Auth
+     *
      * @return void
      */
     public function wp_modal_auth()
@@ -419,7 +421,7 @@ class Modal
             <p class="form-row form-row-last">
                 <button type="submit" class="btn btn-outline-primary" name="apply_coupon"
                         value="<?php esc_attr_e('Apply coupon', 'understrap'); ?>"><?php esc_html_e('Apply coupon',
-                        'understrap'); ?></button>
+                            'understrap'); ?></button>
             </p>
 
             <div class="clear"></div>

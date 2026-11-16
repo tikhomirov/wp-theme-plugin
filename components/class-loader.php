@@ -2,16 +2,19 @@
 /**
  * HTML preloader
  */
+
 namespace theme_plugin\components;
 
 class Loader
 {
-    public function add_actions(){
+    public function add_actions()
+    {
         add_action('wp_body_open', [$this, 'loader_html']);
         add_action('wp_head', [$this, 'css']);
     }
 
-    public function loader_html(){
+    public function loader_html()
+    {
         ?>
         <div class="page-loading active">
             <div class="page-loading-inner">
@@ -21,7 +24,8 @@ class Loader
         <?php
     }
 
-    public function css(){
+    public function css()
+    {
         ?>
         <style>
             .page-loading {
